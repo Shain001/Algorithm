@@ -1,4 +1,4 @@
-package com.shain.array.pointers.fastSlow.slidingWindow.flexibleWindowLength;
+package com.shain.array.pointers.slidingWindow.flexibleWindowLength;
 
 import java.util.HashMap;
 import java.util.Map;

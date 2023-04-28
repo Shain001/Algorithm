@@ -1,4 +1,4 @@
-package com.shain.array.pointers.fastSlow.slidingWindow.UniqElementInWindow;
+package com.shain.array.pointers.slidingWindow.UniqElementInWindow;
 
 import java.util.HashMap;
 import java.util.Map;

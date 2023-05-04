@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+// 通过将带删除元素转移到末尾， 然后删除末尾实现o1时间复杂度
+// 所以需要map存储每个val对应的下标
+// 唯一需要注意是， 删除时， 如果待删除元素已经在末尾， 则不应再将其put到map中
 public class O1_InsertDeleteRandom_L380 {
     private Map<Integer, Integer> map;
     private int[] nums;

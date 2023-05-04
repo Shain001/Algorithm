@@ -25,4 +25,34 @@ public class BFS {
 
         return result;
     }
+
+    public List<Integer> bfs_recursive(TreeNode root) {
+        if (root == null)
+            return result;
+        Queue<TreeNode> treeNodes = new LinkedList<>();
+        treeNodes.add(root);
+        doTraverseLevel(treeNodes);
+        return result;
+    }
+
+    private void doTraverseLevel(Queue<TreeNode> curLevelNodes) {
+        if (curLevelNodes.size() == 0) {
+            return;
+        }
+
+        int curLevelNodesCount = curLevelNodes.size();
+
+        while(curLevelNodesCount != 0) {
+            TreeNode cur = curLevelNodes.poll();
+
+            result.add(cur.val);
+
+            if (cur.right != null)
+                curLevelNodes.offer(cur.right);
+            if (cur.left != null)
+                curLevelNodes.offer(cur.left);
+            curLevelNodesCount--;
+        }
+        doTraverseLevel(curLevelNodes);
+    }
 }

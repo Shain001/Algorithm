@@ -1,4 +1,4 @@
-package com.shain.binaryTree.traverse.bfs;
+package com.shain.binaryTree.traverse.pureTraverse.bfs;
 
 import com.shain.common.tree.TreeNode;
 import com.sun.source.tree.Tree;

@@ -1,4 +1,4 @@
-package com.shain.binaryTree.traverse.pre;
+package com.shain.binaryTree.traverse.pureTraverse.pre;
 
 import com.shain.common.tree.TreeNode;
 

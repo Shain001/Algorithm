@@ -1,4 +1,4 @@
-package com.shain.binaryTree.divide;
+package com.shain.binaryTree.traverse.pureTraverse.pre;
 
 import com.shain.common.tree.TreeNode;
 
@@ -22,4 +22,5 @@ public class PreTraverse_Divide {
         cur.addAll(getTraverse(root.right));
         return cur;
     }
+
 }

@@ -10,9 +10,9 @@ public class ReverseWords_L151 {
     // reverse the whole string, then reverse single words
     public static String reverseWords(String s) {
         // trim space
-        sb = trimSpace(s, 0, s.length()-1);
+        sb = trimSpace(s, 0, s.length() - 1);
         int left = 0;
-        int right = sb.length()-1;
+        int right = sb.length() - 1;
 
         // reverse whole string
         doReverse(left, right);
@@ -30,13 +30,13 @@ public class ReverseWords_L151 {
             right = p;
 
             // find space;
-            while (right+1 < sb.length() && sb.charAt(right+1) != ' ') {
-                right ++;
+            while (right + 1 < sb.length() && sb.charAt(right + 1) != ' ') {
+                right++;
             }
 
             // update p to make it point to start of next word
-            p = right+1;
-            while (p<sb.length() && sb.charAt(p) == ' ') {
+            p = right + 1;
+            while (p < sb.length() && sb.charAt(p) == ' ') {
                 p++;
             }
 
@@ -57,7 +57,7 @@ public class ReverseWords_L151 {
             char temp = sb.charAt(left);
             sb.setCharAt(left, sb.charAt(right));
             sb.setCharAt(right, temp);
-            left ++;
+            left++;
             right--;
         }
     }
@@ -65,7 +65,7 @@ public class ReverseWords_L151 {
     private static StringBuilder trimSpace(String s, int left, int right) {
         StringBuilder trimmed = new StringBuilder();
         // find first nonnull char from left
-        while (left < right && (s.charAt(left)==' ' || s.charAt(right) == ' ')) {
+        while (left < right && (s.charAt(left) == ' ' || s.charAt(right) == ' ')) {
             if (s.charAt(left) == ' ')
                 left++;
             if (s.charAt(right) == ' ')
@@ -74,7 +74,7 @@ public class ReverseWords_L151 {
 
         // NOTE: 此时right已经指向有效string的结尾
         while (left <= right) {
-            if (left > 1 && s.charAt(left-1) == ' ' && s.charAt(left) == ' '){
+            if (left > 1 && s.charAt(left - 1) == ' ' && s.charAt(left) == ' ') {
                 left++;
                 continue;
             }

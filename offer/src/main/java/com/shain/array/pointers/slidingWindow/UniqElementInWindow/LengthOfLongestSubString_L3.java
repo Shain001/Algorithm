@@ -18,7 +18,7 @@ public class LengthOfLongestSubString_L3 {
 
         while (right < s.length()) {
             char curChar = s.charAt(right);
-            window.put(curChar, window.getOrDefault(curChar,0)+1);
+            window.put(curChar, window.getOrDefault(curChar, 0) + 1);
             // Note: tempLength++应该在此处, 而非在28
             // From logical level， tempLength 记录的应该是窗口的大小
             // 如果当前窗口中没有重复， 则继续加入元素， 并且增加窗口长度， 也即tempLength.
@@ -38,7 +38,7 @@ public class LengthOfLongestSubString_L3 {
 
             while (window.get(curChar) > 1) {
                 char removed = s.charAt(left);
-                window.put(removed, window.get(removed)-1);
+                window.put(removed, window.get(removed) - 1);
                 left++;
                 tempLength--;
             }

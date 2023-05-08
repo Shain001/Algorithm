@@ -8,7 +8,7 @@ public class LinkedListUtils {
         while (count < length) {
             head.next = new ListNode(count + 1);
             head = head.next;
-            count ++;
+            count++;
         }
         return toReturn;
     }

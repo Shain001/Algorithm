@@ -12,18 +12,18 @@ public class RangeSumQuery_L303 {
         // 或者可以理解为 对于区间 0-0， 其和应为0
         // NOTE: 此种写法为 "左开右闭区间"， 因此， 返回 原数组中 0-4 下标内的数时， 即为 prefix [5] (对应前4位的和)- prefix[0]
         // 如果初始化prefix长度=length， 则对于0-4 的区间时， 0不好处理
-        prefixSum = new int[nums.length+1];
+        prefixSum = new int[nums.length + 1];
         prefixSum[0] = 0;
 
         // 初始化前缀和数组
         for (int i = 0; i < nums.length; i++) {
-            prefixSum[i+1] = prefixSum[i] + nums[i];
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
     }
 
     // 具体返回 prefixSum[right] - prefix[left]
     // 还是 prefixSum[right-1]-xxxxx
     public int sumRange(int left, int right) {
-        return prefixSum[right+1]-prefixSum[left];
+        return prefixSum[right + 1] - prefixSum[left];
     }
 }

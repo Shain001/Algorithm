@@ -5,7 +5,7 @@ import java.util.List;
 
 public class SpiralMatrix_L54 {
     public static void main(String[] args) {
-        int[][] matrix = new int[][]{{1,2,3,4}, {5,6,7,8}, {9,10,11,12}};
+        int[][] matrix = new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
         System.out.println(spiralOrder(matrix));
     }
 
@@ -16,9 +16,9 @@ public class SpiralMatrix_L54 {
     public static List<Integer> spiralOrder(int[][] matrix) {
         List<Integer> result = new ArrayList<>();
         int left = 0;
-        int right = matrix[0].length-1;
+        int right = matrix[0].length - 1;
         int up = 0;
-        int down = matrix.length-1;
+        int down = matrix.length - 1;
 
 //        while (left <= right || up <= down) {
         while (true) {

@@ -1,8 +1,5 @@
 package com.shain.binaryTree.traverse.pureTraverse.bfs;
 
-import com.shain.common.tree.TreeNode;
-import com.shain.common.tree.TreeNodeWithPointer;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,16 +11,14 @@ public class PopulateNextRight_L116 {
 //        curLevel.add(root);
 //        doPopulate_v2(curLevel);
 
-        if (root == null)
-            return root;
+        if (root == null) return root;
         doPopulate_V3(root.left, root.right);
         return root;
     }
 
     // queue bfs
     public void doPopulate_v1(TreeNodeWithPointer root) {
-        if (root == null)
-            return;
+        if (root == null) return;
 
         Queue<TreeNodeWithPointer> queue = new LinkedList<>();
         queue.offer(root);
@@ -57,7 +52,7 @@ public class PopulateNextRight_L116 {
             // connect
             size--;
             TreeNodeWithPointer cur = curLevel.poll();
-            TreeNodeWithPointer next = size == 0? null: curLevel.peek();
+            TreeNodeWithPointer next = size == 0 ? null : curLevel.peek();
             cur.next = next;
             // add next level
             curLevel.offer(cur.left);
@@ -69,8 +64,7 @@ public class PopulateNextRight_L116 {
 
     // preOrder solution
     public void doPopulate_V3(TreeNodeWithPointer left, TreeNodeWithPointer right) {
-        if (left == null && right == null)
-            return;
+        if (left == null && right == null) return;
 
         left.next = right;
 
@@ -78,5 +72,26 @@ public class PopulateNextRight_L116 {
         doPopulate_V3(right.left, right.right);
         // connect the neighbor nodes from different parents
         doPopulate_V3(left.right, right.left);
+    }
+
+    public class TreeNodeWithPointer {
+        public int val;
+        public TreeNodeWithPointer left;
+        public TreeNodeWithPointer right;
+        public TreeNodeWithPointer next;
+
+        public TreeNodeWithPointer() {
+        }
+
+        public TreeNodeWithPointer(int _val) {
+            val = _val;
+        }
+
+        public TreeNodeWithPointer(int _val, TreeNodeWithPointer _left, TreeNodeWithPointer _right, TreeNodeWithPointer _next) {
+            val = _val;
+            left = _left;
+            right = _right;
+            next = _next;
+        }
     }
 }

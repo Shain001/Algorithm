@@ -7,7 +7,8 @@ import com.shain.common.linkList.ListNode;
  * Reverse first N nodes of the list
  */
 public class ReverseFirstN {
-    private static ListNode newTail=null;
+    private static ListNode newTail = null;
+
     public static void main(String[] args) {
         ListNode head = LinkedListUtils.getTestCase(5);
         System.out.println(reverseN(head, 5));
@@ -27,7 +28,7 @@ public class ReverseFirstN {
         // 1. 反转n个节点
         // 2. 返回新的head
         // 因此， 要反转n个节点， 即相当于 反转了 后n-1个节点以后， 将新的head的next指向第1个节点， 也即line 32.
-        ListNode newHead = doReverse(cur.next,n - 1);
+        ListNode newHead = doReverse(cur.next, n - 1);
         cur.next.next = cur;
         cur.next = newTail;
         return newHead;

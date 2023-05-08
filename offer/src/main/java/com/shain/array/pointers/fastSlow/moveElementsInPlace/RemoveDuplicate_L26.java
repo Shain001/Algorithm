@@ -17,8 +17,8 @@ public class RemoveDuplicate_L26 {
             if (nums[fast] != nums[slow]) {
                 nums[++slow] = nums[fast];
             }
-            fast ++;
+            fast++;
         }
-        return slow+1;
+        return slow + 1;
     }
 }

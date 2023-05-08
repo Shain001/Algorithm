@@ -42,7 +42,7 @@ public class ReverseKGroupIterative_L25 {
             head.next = prev;
             prev = head;
             head = next;
-            count ++;
+            count++;
         }
 
         // curTail 为上一个list的尾节点， 初始值为DumpHead， 方便返回整个链表的新的头节点。

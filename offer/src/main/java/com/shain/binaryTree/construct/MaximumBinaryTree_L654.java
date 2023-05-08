@@ -4,8 +4,9 @@ import com.shain.common.tree.TreeNode;
 
 public class MaximumBinaryTree_L654 {
     private int[] nums;
+
     public TreeNode constructMaximumBinaryTree(int[] nums) {
-        int right = nums.length-1;
+        int right = nums.length - 1;
         this.nums = nums;
         return doConstruct(0, right);
     }
@@ -16,8 +17,8 @@ public class MaximumBinaryTree_L654 {
         }
 
         int maxIndex = getMaximumIndex(left, right);
-        int leftChildRight = maxIndex-1;
-        int rightChildLeft = maxIndex+1;
+        int leftChildRight = maxIndex - 1;
+        int rightChildLeft = maxIndex + 1;
         TreeNode root = new TreeNode(nums[maxIndex]);
         root.left = doConstruct(left, leftChildRight);
         root.right = doConstruct(rightChildLeft, right);

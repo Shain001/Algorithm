@@ -28,6 +28,6 @@ public class EntryOfCycleList_L22 {
         }
 
         // 如果fast为null 或者fast.next为null， 代表链表无环
-        return fast == null || fast.next == null? null: slow;
+        return fast == null || fast.next == null ? null : slow;
     }
 }

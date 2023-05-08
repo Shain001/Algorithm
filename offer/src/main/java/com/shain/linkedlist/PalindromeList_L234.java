@@ -5,28 +5,10 @@ import com.shain.common.linkList.ListNode;
 
 public class PalindromeList_L234 {
     private ListNode left;
+
     public static void main(String[] args) {
         ListNode head = LinkedListUtils.getPalindrome();
         System.out.println(isPalindrome_v2(head));
-    }
-
-    // purely recursive
-    // O(2n), high space complexity
-    // 利用递归实现栈的效果进行首尾比较
-    public boolean isPalindrome_v1(ListNode head) {
-        left = head;
-        return doCompare(head);
-    }
-
-    private boolean doCompare(ListNode cur) {
-        if (cur == null) {
-            return true;
-        }
-
-        Boolean lastPairEqual = doCompare(cur.next);
-        Boolean currentPairEqual = left.val == cur.val;
-        left = left.next;
-        return currentPairEqual && lastPairEqual;
     }
 
     // 反转+比较
@@ -45,7 +27,7 @@ public class PalindromeList_L234 {
         // 反之， 中点为一个， 后半段起点为中点的下一个节点， 即slow.next。
         // 画个图举个例子就想起来了。
         // NOTE: 不可用 fast.next 作为判断条件， 因为fast可能为null；
-        ListNode startPoint = fast == null? slow: slow.next;
+        ListNode startPoint = fast == null ? slow : slow.next;
 
         // reverse last part of the list
         ListNode newStartPoint = doReverse(startPoint);
@@ -78,6 +60,25 @@ public class PalindromeList_L234 {
         }
 
         return prev;
+    }
+
+    // purely recursive
+    // O(2n), high space complexity
+    // 利用递归实现栈的效果进行首尾比较
+    public boolean isPalindrome_v1(ListNode head) {
+        left = head;
+        return doCompare(head);
+    }
+
+    private boolean doCompare(ListNode cur) {
+        if (cur == null) {
+            return true;
+        }
+
+        Boolean lastPairEqual = doCompare(cur.next);
+        Boolean currentPairEqual = left.val == cur.val;
+        left = left.next;
+        return currentPairEqual && lastPairEqual;
     }
 
 

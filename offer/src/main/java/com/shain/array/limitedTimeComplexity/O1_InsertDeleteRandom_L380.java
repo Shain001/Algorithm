@@ -3,7 +3,6 @@ package com.shain.array.limitedTimeComplexity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 // 通过将带删除元素转移到末尾， 然后删除末尾实现o1时间复杂度
 // 所以需要map存储每个val对应的下标
@@ -37,7 +36,7 @@ public class O1_InsertDeleteRandom_L380 {
 
 
         int targetIndex = map.remove(val);
-        if (targetIndex != curLast){
+        if (targetIndex != curLast) {
             map.put(nums[curLast], targetIndex);
             nums[targetIndex] = nums[curLast];
         }

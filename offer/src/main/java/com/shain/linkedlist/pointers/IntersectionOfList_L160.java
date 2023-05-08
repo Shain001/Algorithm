@@ -12,8 +12,8 @@ public class IntersectionOfList_L160 {
         ListNode pB = headB;
 
         while (pA != pB) {
-            pA = pA == null? headB: pA.next;
-            pB = pB ==null? headA: pB.next;
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
         }
 
         // 若没有交点， while将在pA = pB = null 时退出循环

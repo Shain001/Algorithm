@@ -1,7 +1,6 @@
 package com.shain.binaryTree.traverse.pureTraverse.bfs;
 
 import com.shain.common.tree.TreeNode;
-import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,7 +21,7 @@ public class FindLargestValueEachRow_L515 {
             int size = queue.size();
             int max = Integer.MIN_VALUE;
 
-            while (size!= 0) {
+            while (size != 0) {
                 TreeNode cur = queue.poll();
                 max = Math.max(max, cur.val);
                 if (cur.left != null)
@@ -53,8 +52,8 @@ public class FindLargestValueEachRow_L515 {
             result.set(depth, Math.max(cur.val, result.get(depth)));
         }
 
-        doDfs(cur.left, depth+1);
-        doDfs(cur.right, depth+1);
+        doDfs(cur.left, depth + 1);
+        doDfs(cur.right, depth + 1);
     }
 
     // v3: bfs recursive
@@ -75,7 +74,7 @@ public class FindLargestValueEachRow_L515 {
         int max = Integer.MIN_VALUE;
         int curLevelNodesCount = curLevelNodes.size();
 
-        while(curLevelNodesCount != 0) {
+        while (curLevelNodesCount != 0) {
             TreeNode cur = curLevelNodes.poll();
             max = Math.max(cur.val, max);
 

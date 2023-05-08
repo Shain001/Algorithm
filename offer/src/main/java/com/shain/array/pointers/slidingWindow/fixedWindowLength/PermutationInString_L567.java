@@ -39,11 +39,11 @@ public class PermutationInString_L567 {
                     return true;
                 // 3.1 do remove
                 char removed = s.charAt(left);
-                window.put(removed, window.get(removed)-1);
-                left ++;
+                window.put(removed, window.get(removed) - 1);
+                left++;
                 // 3.2
                 if (need.containsKey(removed)) {
-                    need.put(removed, need.get(removed)+1);
+                    need.put(removed, need.get(removed) + 1);
                     // if not in anymore, start adding value to window.
                     // NOTE: This condition HAS to be checking if the value is equal to 1,
                     // Since only when needs[c] change from 0 to 1, then the countSatisfied should increase 1
@@ -53,7 +53,7 @@ public class PermutationInString_L567 {
                     // needs[c] 由0 变1， 窗口内消失了足够数量的c， 代表满足条件的char应减少一个， 也即 countSatisfy 应-1
                     // needs[c] 由1 变2， 窗口内"没有消失更多的元素， 缺的还是c， 只是c需要的数量从1个变成了2个"， countStisfy 值不变
                     // If you forgot this part, go to Leetcode 76, and change line 66 from ==1 to ==0, you would find it can't pass
-                    countSatisfied = need.get(removed) == 1? countSatisfied - 1: countSatisfied;
+                    countSatisfied = need.get(removed) == 1 ? countSatisfied - 1 : countSatisfied;
                 }
             }
 

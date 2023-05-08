@@ -40,7 +40,7 @@ public class TheLastKthNode_Offer22 {
         ListNode slow = dumpHead;
         ListNode fast = dumpHead;
 
-        for (int i = 0; i < n+1; i++) {
+        for (int i = 0; i < n + 1; i++) {
             fast = fast.next;
         }
 

@@ -20,24 +20,66 @@ package com.shain.array.pointers.twoPointer.binarySearch;
 // 而 对于 right = mid 的条件， 当只剩两个数时， 由于是向下取整， right会被取到 等于 left 的那一个index， 所以正好能够出循环， 不会导致死循环。
 public class BinarySearchAndSearchBoundary_Root {
     public static void main(String[] args) {
-        int[] nums = new int[]{-1,0,3,5,9,12};
+        int[] nums = new int[]{-1, 0, 3, 5, 9, 12};
 
-        int[] test1 = new int[]{1,2,2,2,2,2,9};
-        int[] test2 = new int[]{1,2};
+        int[] test1 = new int[]{1, 2, 2, 2, 2, 2, 9};
+        int[] test2 = new int[]{1, 2};
         int[] test3 = new int[]{1};
 
         System.out.println(searchRightBoundary(test1, 9));
     }
 
+    public static int searchLeftBoundary(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (target < nums[mid])
+                right = mid - 1;
+            if (target > nums[mid])
+                left = mid + 1;
+            if (target == nums[mid])
+                right = mid;
+        }
+
+        // This if does two things
+        // 1. check if the targeted value exists in nums
+        // 2. check 漏判的 left = right 时的 [left, right] 区间中的数是否等于target
+        if (nums[left] != target) return -1;
+
+        return left;
+    }
+
+    // 只要不是在while中直接return的情况， 都是 while (left < right)
+    public static int searchRightBoundary(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        // < 的好处为最终while一定停止在left=right， 无需判断返回left还是right。
+        while (left < right) {
+            int mid = left + (right - left + 1) / 2;
+            if (target < nums[mid])
+                right = mid - 1;
+            if (target > nums[mid])
+                left = mid + 1;
+            if (target == nums[mid])
+                left = mid;
+
+        }
+
+        if (nums[left] != target) return -1;
+        return left;
+    }
 
     public int search(int[] nums, int target) {
         int left = 0;
-        int right = nums.length-1;
+        int right = nums.length - 1;
 
         while (left <= right) {
             // Point 3:
             // 注意， 此处永远是向下取整， 即当list长度为偶数， mid有两个时， 取得的永远是左侧的mid。
-            int mid = left + (right-left)/2;
+            int mid = left + (right - left) / 2;
 
             if (nums[mid] == target) {
                 return mid;
@@ -48,52 +90,9 @@ public class BinarySearchAndSearchBoundary_Root {
                 continue;
             }
 
-            right = mid -1;
+            right = mid - 1;
         }
         return -1;
-    }
-
-    public static int searchLeftBoundary(int[] nums, int target) {
-        int left = 0;
-        int right = nums.length-1;
-
-        while (left < right) {
-            int mid = left + (right-left)/2;
-            if (target < nums[mid])
-                right = mid-1;
-            if (target > nums[mid])
-                left = mid+1;
-            if (target == nums[mid])
-                right = mid;
-        }
-
-        // This if does two things
-        // 1. check if the targeted value exists in nums
-        // 2. check 漏判的 left = right 时的 [left, right] 区间中的数是否等于target
-        if(nums[left]!=target) return -1;
-
-        return left;
-    }
-
-    // 只要不是在while中直接return的情况， 都是 while (left < right)
-    public static int searchRightBoundary(int[] nums, int target) {
-        int left = 0;
-        int right = nums.length-1;
-
-        // < 的好处为最终while一定停止在left=right， 无需判断返回left还是right。
-        while (left < right) {
-            int mid = left + (right-left+1)/2;
-            if (target < nums[mid])
-                right = mid-1;
-            if (target > nums[mid])
-                left = mid+1;
-            if (target == nums[mid])
-                left = mid;
-
-        }
-
-        if(nums[left]!=target) return -1;
-        return left;
     }
 
 }

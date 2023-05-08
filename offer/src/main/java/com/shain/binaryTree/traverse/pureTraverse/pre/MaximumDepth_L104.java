@@ -16,7 +16,7 @@ public class MaximumDepth_L104 {
             return;
         }
 
-        traverse(root.left, curDepth+1);
-        traverse(root.right, curDepth+1);
+        traverse(root.left, curDepth + 1);
+        traverse(root.right, curDepth + 1);
     }
 }

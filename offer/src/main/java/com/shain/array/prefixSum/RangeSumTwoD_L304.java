@@ -12,7 +12,7 @@ public class RangeSumTwoD_L304 {
     public RangeSumTwoD_L304(int[][] matrix) {
         int rows = matrix.length;
         int cols = matrix[0].length;
-        prefixSum = new int[rows+1][cols+1];
+        prefixSum = new int[rows + 1][cols + 1];
         prefixSum[0][0] = 0;
 
         for (int i = 0; i < rows; i++) {

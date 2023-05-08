@@ -1,7 +1,6 @@
 package com.shain.binaryTree.traverse.modifyTree;
 
 import com.shain.common.tree.TreeNode;
-import com.shain.common.tree.TreeNodeWithPointer;
 
 public class FlattenToLinkedList_L114 {
     public void flatten(TreeNode root) {

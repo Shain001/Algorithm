@@ -1,10 +1,8 @@
 package com.shain.array.others;
 
-import java.io.FilterOutputStream;
-
 public class RotateImage_L48 {
     public static void main(String[] args) {
-        int[][] matrix = new int[][]{{1,2,3}, {5,6,7}, {9,10,11}};
+        int[][] matrix = new int[][]{{1, 2, 3}, {5, 6, 7}, {9, 10, 11}};
         rotate(matrix);
     }
 
@@ -19,9 +17,9 @@ public class RotateImage_L48 {
             }
         }
 
-        for (int[] rows: matrix) {
+        for (int[] rows : matrix) {
             int left = 0;
-            int right = matrix.length-1;
+            int right = matrix.length - 1;
             while (left <= right) {
                 int temp = rows[left];
                 rows[left] = rows[right];

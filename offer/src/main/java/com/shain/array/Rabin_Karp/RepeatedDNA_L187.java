@@ -1,6 +1,9 @@
 package com.shain.array.Rabin_Karp;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RepeatedDNA_L187 {
     public static void main(String[] args) {
@@ -37,7 +40,8 @@ public class RepeatedDNA_L187 {
                 case 'T':
                     converted[i] = 3;
                     break;
-                default: break;
+                default:
+                    break;
             }
         }
 
@@ -57,7 +61,7 @@ public class RepeatedDNA_L187 {
             if (right - left == 9) {
                 occurred.put(hash, occurred.getOrDefault(hash, 0) + 1);
                 if (occurred.get(hash) == 2) {
-                    result.add(s.substring(left, right+1));
+                    result.add(s.substring(left, right + 1));
                 }
 
                 // pop out
@@ -84,12 +88,12 @@ public class RepeatedDNA_L187 {
         int right = 10;
 
         // NOTE： 此处为 +1， right为10 是因为java substring 是左闭右开
-        while (right < s.length()+1) {
+        while (right < s.length() + 1) {
 
             String cur = s.substring(left, right);
-            occurred.put(cur, occurred.getOrDefault(cur,0)+1);
+            occurred.put(cur, occurred.getOrDefault(cur, 0) + 1);
 
-            if (occurred.getOrDefault(cur, 0) == 2){
+            if (occurred.getOrDefault(cur, 0) == 2) {
                 result.add(cur);
             }
 

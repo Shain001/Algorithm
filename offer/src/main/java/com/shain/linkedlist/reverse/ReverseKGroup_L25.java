@@ -5,6 +5,7 @@ import com.shain.common.linkList.ListNode;
 
 public class ReverseKGroup_L25 {
     private static ListNode startOfNextSubList;
+
     public static void main(String[] args) {
         ListNode head = LinkedListUtils.getTestCase(5);
         System.out.println(reverseKGroup(head, 2));
@@ -38,7 +39,7 @@ public class ReverseKGroup_L25 {
             return cur;
         }
 
-        ListNode newHead = reverseK(cur.next, k-1);
+        ListNode newHead = reverseK(cur.next, k - 1);
         cur.next.next = cur;
         cur.next = startOfNextSubList;
         return newHead;

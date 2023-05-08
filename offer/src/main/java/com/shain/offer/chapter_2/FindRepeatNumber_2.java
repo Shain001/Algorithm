@@ -4,7 +4,7 @@ package com.shain.offer.chapter_2;
  * Element from 1 - n
  * length of array n+1
  * Which means there must be at least one repeat number
- *
+ * <p>
  * Not allow to modify the input array
  *
  * @date: 19/02/2023

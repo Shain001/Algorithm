@@ -42,7 +42,7 @@ public class BFS {
 
         int curLevelNodesCount = curLevelNodes.size();
 
-        while(curLevelNodesCount != 0) {
+        while (curLevelNodesCount != 0) {
             TreeNode cur = curLevelNodes.poll();
 
             result.add(cur.val);

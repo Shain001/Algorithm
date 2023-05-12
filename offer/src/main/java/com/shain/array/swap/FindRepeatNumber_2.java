@@ -1,4 +1,4 @@
-package com.shain.offer.chapter_2;
+package com.shain.array.swap;
 
 /**
  * Element from 1 - n

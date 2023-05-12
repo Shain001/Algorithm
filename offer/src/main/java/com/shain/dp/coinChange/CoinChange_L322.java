@@ -22,6 +22,6 @@ public class CoinChange_L322 {
             }
         }
 
-        return dp[amount] == amount+1? -1: dp[amount];
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
     }
 }

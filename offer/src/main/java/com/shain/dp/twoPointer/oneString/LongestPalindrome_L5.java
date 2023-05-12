@@ -21,10 +21,10 @@ public class LongestPalindrome_L5 {
         for (int i = 0; i < s.length(); i++) {
             dp[i][i] = 1;
             isPalindrome[i][i] = true;
-            if (i+1 < sLen) {
-                dp[i][i+1] = s.charAt(i) == s.charAt(i+1)? 2: 0;
-                isPalindrome[i][i+1] = dp[i][i + 1] == 2;
-                if (isPalindrome[i][i+1]) updateResult(2, i);
+            if (i + 1 < sLen) {
+                dp[i][i + 1] = s.charAt(i) == s.charAt(i + 1) ? 2 : 0;
+                isPalindrome[i][i + 1] = dp[i][i + 1] == 2;
+                if (isPalindrome[i][i + 1]) updateResult(2, i);
             }
         }
 
@@ -38,12 +38,12 @@ public class LongestPalindrome_L5 {
 
                 // 如果当前两字符不相等， 直接跳过
                 if (s.charAt(i) != s.charAt(j)) {
-                    dp[i][j] = Math.max(dp[i][j-1], dp[i+1][j]);
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);
                     continue;
                 }
 
                 // 如果相等， 并且当前长度为3
-                if (curLen == 3){
+                if (curLen == 3) {
                     dp[i][j] = 3;
                     isPalindrome[i][j] = true;
                     updateResult(curLen, i);
@@ -51,17 +51,17 @@ public class LongestPalindrome_L5 {
                 }
 
                 // 如果长度已经超过3， 不仅需要判断当前字符相不相等， 还要判断i+1， j-1是不是回文串。
-                if (isPalindrome[i+1][j-1]) {
+                if (isPalindrome[i + 1][j - 1]) {
                     dp[i][j] = curLen;
                     isPalindrome[i][j] = true;
                     updateResult(curLen, i);
                 } else {
-                    dp[i][j] = Math.max(dp[i][j-1], dp[i+1][j]);
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);
                 }
             }
         }
 
-        return s.substring(start, start+max);
+        return s.substring(start, start + max);
     }
 
     private static void updateResult(int curLen, int index) {

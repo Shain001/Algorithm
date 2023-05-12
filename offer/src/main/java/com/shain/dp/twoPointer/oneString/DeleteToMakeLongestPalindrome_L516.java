@@ -17,34 +17,34 @@ public class DeleteToMakeLongestPalindrome_L516 {
 
         // 两个字符
         for (int i = 0; i < len; i++) {
-            if (i+1 < len) {
-                dp[i][i+1] = s.charAt(i) == s.charAt(i+1)? 0: 1;
+            if (i + 1 < len) {
+                dp[i][i + 1] = s.charAt(i) == s.charAt(i + 1) ? 0 : 1;
             }
         }
 
         // 两个以上字符
         for (int curLen = 3; curLen <= len; curLen++) {
-            for (int start = 0; start < len; start ++) {
-                int end = start + curLen-1;
+            for (int start = 0; start < len; start++) {
+                int end = start + curLen - 1;
 
-                if (end > len-1) {
+                if (end > len - 1) {
                     continue;
                 }
                 System.out.println(start + " " + end);
-                if (s.charAt(start) == s.charAt(end)){
-                    dp[start][end] = dp[start+1][end-1];
+                if (s.charAt(start) == s.charAt(end)) {
+                    dp[start][end] = dp[start + 1][end - 1];
                 } else {
-                    dp[start][end] = getMin(dp[start+1][end], dp[start][end-1], dp[start+1][end-1]);
+                    dp[start][end] = getMin(dp[start + 1][end], dp[start][end - 1], dp[start + 1][end - 1]);
                 }
             }
         }
 
-        return len-dp[0][len-1];
+        return len - dp[0][len - 1];
     }
 
     private static int getMin(int deleteR, int deleteL, int deleteBoth) {
         int temp = Math.min(deleteR, deleteL) + 1;
-        return Math.min(temp, deleteBoth+2);
+        return Math.min(temp, deleteBoth + 2);
     }
 
     // v2
@@ -58,31 +58,31 @@ public class DeleteToMakeLongestPalindrome_L516 {
         }
 
         for (int i = 0; i < sLen; i++) {
-            if (i + 1 <= sLen-1) {
-                if (s.charAt(i) == s.charAt(i+1)){
-                    dp[i][i+1] = 2;
+            if (i + 1 <= sLen - 1) {
+                if (s.charAt(i) == s.charAt(i + 1)) {
+                    dp[i][i + 1] = 2;
                 } else {
-                    dp[i][i+1] = 1;
+                    dp[i][i + 1] = 1;
                 }
             }
         }
 
-        for (int curLen = 3; curLen<=sLen; curLen++) {
+        for (int curLen = 3; curLen <= sLen; curLen++) {
             for (int start = 0; start < sLen; start++) {
-                int end = start + curLen -1;
+                int end = start + curLen - 1;
 
-                if ( end > sLen-1) {
+                if (end > sLen - 1) {
                     continue;
                 }
 
                 if (s.charAt(start) == s.charAt(end)) {
-                    dp[start][end] = dp[start+1][end-1] + 2;
+                    dp[start][end] = dp[start + 1][end - 1] + 2;
                 } else {
-                    dp[start][end] = Math.max(dp[start+1][end-1], Math.max(dp[start+1][end], dp[start][end-1]));
+                    dp[start][end] = Math.max(dp[start + 1][end - 1], Math.max(dp[start + 1][end], dp[start][end - 1]));
                 }
             }
         }
 
-        return dp[0][sLen-1];
+        return dp[0][sLen - 1];
     }
 }

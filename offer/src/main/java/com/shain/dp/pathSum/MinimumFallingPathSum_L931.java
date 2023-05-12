@@ -1,7 +1,5 @@
 package com.shain.dp.pathSum;
 
-import java.util.Arrays;
-
 public class MinimumFallingPathSum_L931 {
     public static void main(String[] args) {
         System.out.println(minFallingPathSum(new int[][]{{-19, 57}, {-40, -5}}));
@@ -16,10 +14,10 @@ public class MinimumFallingPathSum_L931 {
         System.arraycopy(matrix[0], 0, dp[0], 0, matrix[0].length);
 
         for (int i = 1; i < matrix.length; i++) {
-            for (int j = dp.length-1; j >=0 ; j--) {
-                int above = dp[i-1][j];
-                int la = j - 1 >= 0 ? dp[i-1][j - 1] : Integer.MAX_VALUE;
-                int ra = j + 1 <= matrix.length - 1 ? dp[i-1][j + 1] :  Integer.MAX_VALUE;
+            for (int j = dp.length - 1; j >= 0; j--) {
+                int above = dp[i - 1][j];
+                int la = j - 1 >= 0 ? dp[i - 1][j - 1] : Integer.MAX_VALUE;
+                int ra = j + 1 <= matrix.length - 1 ? dp[i - 1][j + 1] : Integer.MAX_VALUE;
                 dp[i][j] = matrix[i][j] + Math.min(above, Math.min(la, ra));
 
 //                if (i == matrix.length - 1)
@@ -30,7 +28,7 @@ public class MinimumFallingPathSum_L931 {
         // result 的比较写在这里好， 写在line21的话对于 matrix.length=1的情况不好处理， 需要特判
         // e.g. matrix = [[3]]
         int result = Integer.MAX_VALUE;
-        for (int i = matrix.length-1; i < matrix[0].length; i++)
+        for (int i = matrix.length - 1; i < matrix[0].length; i++)
             for (int j = 0; j < matrix[0].length; j++)
                 result = Math.min(result, dp[i][j]);
         return result;
@@ -40,20 +38,20 @@ public class MinimumFallingPathSum_L931 {
     // copy from answer
     public int minFallingPathSum_noArray(int[][] A) {
         int N = A.length;
-        for (int r = N-2; r >= 0; --r) {
+        for (int r = N - 2; r >= 0; --r) {
             for (int c = 0; c < N; ++c) {
                 // best = min(A[r+1][c-1], A[r+1][c], A[r+1][c+1])
-                int best = A[r+1][c];
+                int best = A[r + 1][c];
                 if (c > 0)
-                    best = Math.min(best, A[r+1][c-1]);
-                if (c+1 < N)
-                    best = Math.min(best, A[r+1][c+1]);
+                    best = Math.min(best, A[r + 1][c - 1]);
+                if (c + 1 < N)
+                    best = Math.min(best, A[r + 1][c + 1]);
                 A[r][c] += best;
             }
         }
 
         int ans = Integer.MAX_VALUE;
-        for (int x: A[0])
+        for (int x : A[0])
             ans = Math.min(ans, x);
         return ans;
     }

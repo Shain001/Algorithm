@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.string;
+package com.shain.dp.twoPointer.twoString;
 
 import java.util.Arrays;
 import java.util.HashSet;

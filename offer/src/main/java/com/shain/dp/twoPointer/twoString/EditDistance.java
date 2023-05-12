@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.string;
+package com.shain.dp.twoPointer.twoString;
 
 public class EditDistance {
     public static void main(String[] args) {

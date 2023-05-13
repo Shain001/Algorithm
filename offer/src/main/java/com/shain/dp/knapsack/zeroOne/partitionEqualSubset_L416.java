@@ -10,7 +10,7 @@ public class partitionEqualSubset_L416 {
     /**
      * 关键在于对问题的转化， 所谓能分成 和相等的两组数， 即代表数组中是否存在 和 等于 数组所有元素的和的一半的子集。
      * <p>
-     * 递归方程：
+     * dp方程：
      * 对于每一个数组中的数，也即当前遍历到的数， 只有两种选择， 被选中与不被选。
      * 假设当前计算到 5 （index=1）， nums = [1, 5, 11, 5], 当前target = 11 （即j=11）
      * 如果被选， 则 11 - 5 = 6。 需要判断的条件变成 0- i-1 的下标中， 有没有元素相加能够得到6？ 也即 dp[i][j] = dp[i-1][j-nums[i]]
@@ -45,6 +45,7 @@ public class partitionEqualSubset_L416 {
 
         // dp 表示数组中得数能否想加得到 i
         // 长度为sum+1 因为0为baseCase
+        // todo: 验证是否初始化成 nums.length+1, 以保持跟完全背包一致方便记忆。
         boolean[][] dp = new boolean[nums.length][sum / 2 + 1];
 
         for (int i = 0; i < dp.length; i++) {

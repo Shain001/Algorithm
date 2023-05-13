@@ -1,4 +1,4 @@
-package com.shain.dp.coinChange;
+package com.shain.dp.knapsack.unboundedKnapsack;
 
 import java.util.Arrays;
 

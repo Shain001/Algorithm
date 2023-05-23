@@ -1,4 +1,4 @@
-package com.shain.dp;
+package com.shain.dp.array;
 
 public class HouseRobber_L198 {
     public int rob(int[] nums) {

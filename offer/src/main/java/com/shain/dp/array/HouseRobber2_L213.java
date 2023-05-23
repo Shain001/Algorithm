@@ -1,4 +1,4 @@
-package com.shain.dp;
+package com.shain.dp.array;
 
 public class HouseRobber2_L213 {
     public static void main(String[] args) {

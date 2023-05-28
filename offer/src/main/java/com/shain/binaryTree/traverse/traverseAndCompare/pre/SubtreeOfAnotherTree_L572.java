@@ -1,4 +1,4 @@
-package com.shain.binaryTree.traverse.traverseAndCompare;
+package com.shain.binaryTree.traverse.traverseAndCompare.pre;
 
 import com.shain.common.tree.TreeNode;
 

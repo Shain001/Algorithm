@@ -1,4 +1,4 @@
-package com.shain.dp.pathSum.preTraverse;
+package com.shain.dp.pathSum.upBottomTraverse;
 
 public class MinimumFallingPathSum_L931 {
     public static void main(String[] args) {

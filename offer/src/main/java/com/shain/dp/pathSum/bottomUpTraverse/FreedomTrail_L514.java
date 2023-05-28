@@ -1,4 +1,4 @@
-package com.shain.dp.pathSum.reverseTraverse;
+package com.shain.dp.pathSum.bottomUpTraverse;
 
 import java.util.ArrayList;
 import java.util.HashMap;

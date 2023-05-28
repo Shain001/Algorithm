@@ -1,7 +1,6 @@
-package com.shain.dp.pathSum.reverseTraverse;
+package com.shain.dp.pathSum.bottomUpTraverse;
 
 import com.shain.common.tree.TreeNode;
-import com.sun.source.tree.Tree;
 
 import java.util.HashMap;
 import java.util.Map;

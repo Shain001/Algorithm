@@ -23,7 +23,7 @@ public class HouseRobber3_L337 {
             return 0;
         }
 
-        if (cache.containsKey(root)){
+        if (cache.containsKey(root)) {
             return cache.get(root);
         }
 

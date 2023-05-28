@@ -3,7 +3,7 @@ package com.shain.binaryTree.traverse.traverseAndCompare.post;
 import com.shain.common.tree.TreeNode;
 
 public class CountUniValueSubtree_L250 {
-    private int count=0;
+    private int count = 0;
 
     public int countUnivalSubtrees(TreeNode root) {
         isUniValueSubutree(root);
@@ -32,7 +32,7 @@ public class CountUniValueSubtree_L250 {
         }
 
         if (isEqual && rightIsQunique && leftIsUnique) {
-            count ++;
+            count++;
             return true;
         }
 

@@ -12,11 +12,11 @@ public class BestTimeStock2_L122 {
 
         for (int i = 1; i < prices.length; i++) {
             // 第i 天手头持有0股， 两种可能性： 前一天就没持有股票， 当天 rest -> dp[i-1][0]; 前一天持有了股票， 当天卖了->dp[i-1][0]
-            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1] + prices[i]);
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
             // difference with stock1_L121 see comments in L121's code.
-            dp[i][1] = Math.max(dp[i-1][1], dp[i-1][0] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i]);
         }
 
-        return dp[dp.length-1][0];
+        return dp[dp.length - 1][0];
     }
 }

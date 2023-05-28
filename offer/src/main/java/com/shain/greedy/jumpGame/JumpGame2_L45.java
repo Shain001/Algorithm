@@ -1,11 +1,10 @@
 package com.shain.greedy.jumpGame;
 
-import java.util.Enumeration;
-
 public class JumpGame2_L45 {
     public static void main(String[] args) {
-        System.out.println(jump(new int[]{2,3,1,1,4}));
+        System.out.println(jump(new int[]{2, 3, 1, 1, 4}));
     }
+
     // 相当于BFS
     // todo: this is shitting implementation, there is a better version of implementation with same logic, to tied to to think now
     public static int jump(int[] nums) {
@@ -23,13 +22,13 @@ public class JumpGame2_L45 {
             // 遍历当前格子所能到达的所有格子， 找到这些格子中能够跳的最远的， 就是当前格子要跳的目标。
             int j = i;
             while (j <= curFurthest) {
-                if (j == nums.length-1){
+                if (j == nums.length - 1) {
                     return steps;
                 }
-                if (j+nums[j] > furthest) {
+                if (j + nums[j] > furthest) {
                     // 即代表， 下一次要从j起跳
                     i = j;
-                    furthest = j+nums[j];
+                    furthest = j + nums[j];
                 }
                 j++;
             }

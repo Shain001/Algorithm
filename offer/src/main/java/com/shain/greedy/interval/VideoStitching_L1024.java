@@ -20,7 +20,7 @@ public class VideoStitching_L1024 {
      * 1. 为什么无需对end进行降序排序？
      * 原因在于 初始化了 curEnd=0; 并且 外层while中加了条件  clips[i][0] <= curEnd
      * 因此想象以下， 当第一次进入while时， 假设有三个区间 start = 0; 这个clips[i][0] <= curEnd （curEnd=0） 相当于for了所有start=0
-     * 的区间， 然后选取了最长的区间的end值，当成了第一个curEnd；
+     * 的区间， 然后选取了最长的区间的end值，当成了第一个curEnd (see line 58)；
      * <p>
      * 2. 为什么 count 初始化为0 而不是1？
      * 同样是因为 curEnd 初始化成了0， 这使得 在第一次进入for循环时， 实际是在选取 "第一个区间"

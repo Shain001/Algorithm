@@ -8,7 +8,6 @@ public class ReverseBetween_L92 {
     private ListNode newTail;
 
     public static void main(String[] args) {
-
     }
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
@@ -28,4 +27,43 @@ public class ReverseBetween_L92 {
         cur.next = reverseBetween(cur.next, left - 1, right - 1);
         return cur;
     }
+
+    public ListNode reverseBetween_review(ListNode head, int left, int right) {
+        int count = 0;
+        ListNode dummyHead = new ListNode(-1);
+        dummyHead.next = head;
+
+        // 1. 找到left节点的前一个节点
+        ListNode h = dummyHead;
+        while (count < left-1) {
+            h = h.next;
+            count++;
+        }
+
+        // 2. 断开left前一个节点与left节点， 此时left节点即相当于另一个链表的头节点。
+        // 3. 我们要做的， 即将以 left节点为头节点的链表， 反转前 k 个节点
+        // 4. 返回反转后的新的头节点， 将 乐翻天节点的头一个节点 next 指向 反转后返回的头节点。
+        ListNode originalLeft = h.next;
+
+        h.next = doReverseK(originalLeft, right-left+1);
+
+
+        return dummyHead.next;
+    }
+
+    private ListNode tail;
+
+    private ListNode doReverseK(ListNode head, int k) {
+        if (k == 1) {
+            tail = head.next;
+            return head;
+        }
+
+        ListNode reversedHead = doReverseK(head.next, k-1);
+        head.next.next = head;
+        head.next = tail;
+
+        return reversedHead;
+    }
+
 }

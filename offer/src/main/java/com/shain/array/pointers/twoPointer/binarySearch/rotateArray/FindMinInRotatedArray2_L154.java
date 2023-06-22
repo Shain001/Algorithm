@@ -28,7 +28,7 @@ public class FindMinInRotatedArray2_L154 {
                 // 所以解决方案为： 如果相等时， 只需要将right向左移动一位即可。
                 // why?
                 // 假设target在mid的左侧 -> right - 1 可以使mid向左移
-                // 假设target在mid的右侧 -> right -1 最终会使得right到达target位置， 之后left会与right汇合出循环。
+                // 假设target在mid的右侧 -> right -1 最终会使得right到达target位置 （e.g. line 27, right 最后会指向0）， 之后left会与right汇合出循环。
                 // 假设target即mid， [1,1,0,0,0] -> right -1 以后， 会进入到正常逻辑
             else if (nums[mid] == nums[right])
                 right--;

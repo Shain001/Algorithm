@@ -19,16 +19,15 @@ public class SearchInsert_L35 {
                 left = mid + 1;
         }
 
-        // 之所以只需返回left即可， 是因为只要代码走到这， 说明nums中没有target
-        // 而此时最后一次循环时的区间范围只有两种情况
-        // 要么区间中只有两个数
-        // 要么区间中有一个数
-        // 而无论哪种情况， 最后一次循环一定会走到line 18
-        // 假设区间中有两个数 【3， 5】, 由于 mid = left + (right-left)/2 是向下取整， 所以mid肯定指向3， 也即比target小的那个数， 所以
-        // 在出while循环使， left = mid + 1 正好就是答案
-        // 如果区间中只有一个数， 可以举个极限例子来理解
-        // 假设 nums = [2] , target = 3 时，走入line18， 出while时left = 1 正好为答案
-        // 假设 nums = [2], target = 1, 走入line16， right=-1， 出了while， left依然为0， 正好为答案。
+        // 之所以只需返回left即可， 是因为:
+        // 首先如果代码走到这里， 说明没有target。
+        // 其次， you would be wondering, why left is always the correct answer, if so, always take two examples
+        // first， 数组长度为2 [3, 5] 搜索 target=1。
+        // 由于 mid = left + (right - left) / 2; 总是向下取整 （这里很重要）， 所以第一次循环 比的是left （因为mid计算后就等于0）
+        // 此时 target < mid， "left 不用动"， right=mid-1， 之后right=left， target依然小于mid， left还是不动， 第二次循环以后
+        // 就出while了。 see, left is always not moving.
+        // Now， let's make target = 6， it would be similar, you can try.
+        // Then you give an example as [4] and target = 1 or 5, that would be the same
         return left;
     }
 }

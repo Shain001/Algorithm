@@ -32,15 +32,21 @@ public class ReverseList_L206 {
     }
 
     public static ListNode reverseListLoop(ListNode head) {
+        // 像你媳妇说的， 做链表题的时候， 别重新排序， 就改箭头。
+        // 对于每一个节点而言， 只需要进行一个操作， 即将当前 节点 的next指针指向原本的前一个节点prev。
         ListNode prev = null;
 
         while (head != null) {
+            // 一定要记住， 这里的prev， next， 都是指的原本的 prev 和next。
             ListNode next = head.next;
             head.next = prev;
+            // 所以此处， 对head操作了以后， head就变成了 下一个节点的 原本的 prev节点
             prev = head;
             head = next;
         }
 
+        // 此处之所以返回prev， 出循环以后， head指向了空节点， 原本反转之前的链表的空节点的前一个节点， 就是现在的新头节点。
+        // 而这个 原本反转之前的链表的空节点的前一个节点  就是用prev表示的
         return prev;
     }
 }

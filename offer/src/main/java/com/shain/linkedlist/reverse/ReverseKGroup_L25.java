@@ -8,7 +8,7 @@ public class ReverseKGroup_L25 {
 
     public static void main(String[] args) {
         ListNode head = LinkedListUtils.getTestCase(5);
-        System.out.println(reverseKGroup(head, 2));
+        System.out.println(reverseKGroup_review(head, 2));
     }
 
     public static ListNode reverseKGroup(ListNode head, int k) {
@@ -52,5 +52,40 @@ public class ReverseKGroup_L25 {
             cur = cur.next;
         }
         return true;
+    }
+
+    public static ListNode reverseKGroup_review(ListNode head, int k) {
+
+        // check if curHead has enough len, if not return head.
+        if (head == null || !hasEnoughLength(head, k)) {
+            return head;
+        }
+
+        // current.next next points to current
+        int tempK = k;
+        ListNode next = null;
+        ListNode originalHead = head;
+        ListNode prev = null;
+        while (tempK > 0) {
+            next = head.next;
+            head.next = prev;
+            prev = head;
+            head = next;
+            tempK--;
+        }
+        // current next points to the reversed next group's head.
+        originalHead.next = reverseKGroup(next, k);
+        return prev;
+    }
+
+    public static boolean hasEnoughLength(ListNode head, int k) {
+        int count = 0;
+
+        while (count < k && head != null) {
+            head = head.next;
+            count++;
+        }
+
+        return count == k;
     }
 }

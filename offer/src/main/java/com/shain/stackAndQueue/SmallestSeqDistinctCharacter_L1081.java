@@ -1,4 +1,4 @@
-package com.shain.array.stack;
+package com.shain.stackAndQueue;
 
 import java.util.Stack;
 

@@ -1,4 +1,4 @@
-package com.shain.array.limitedTimeComplexity;
+package com.shain.array.limitedComplexity;
 
 import java.util.HashMap;
 import java.util.Map;

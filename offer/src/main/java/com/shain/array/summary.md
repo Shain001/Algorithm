@@ -1,12 +1,14 @@
 # 数组
 
-数组无非： 寻找重复/ 寻找target或边界 / 删除 / 添加 / 排序 / getRandom / 差分 / 前缀和
+数组题目类型： 寻找重复/ 寻找target或边界 / 删除 / 添加 / 排序 / getRandom / 差分 / 前缀和 / 寻找第k大 
 
 对于寻找target或边界 -> 二分 -> 见 pointer/twopoint/binarySearch/summary.md
 
 对于 排序， 此处指的是 O(n) 实现排序， 在满足条件的情况下可以使用 原地Hash 的方法 （即 原地交换）
 
 差分前缀和看两道题就行了， 此处略， but 对与差分/前缀和 有一些 隐式应用， to be summarized. e.g. L528 带权重的随机数（前缀和+二分）。
+
+TODO： 两个及以上个数组， e.g. 870， 
 
 ## O(1) 实现数组 添加 删除 指定元素 (同时满足getRandom 所有元素等概率) -> L380
 
@@ -67,3 +69,10 @@ There is only three possibilities for the numbers in an array：
 **在要保证去重之后， 元素间顺序不变的情况下 -> 可以使用stack操作去重。**
 
 **要保证去重之后， 不仅元素间顺序不变， 还要保证"字典序最小" （当然，int顺序也同理） -> 单调栈 -> 尽量保持栈顶元素最小（L1081）**
+
+## 寻找第k大
+
+利用快排的pivot思想进行。
+需注意：
+1. getPivot方法易写错
+2. 整体getKth 的方法时间复杂度 在平均是 O(n) 而非O(logn) （当结论记, you though it's O(logn）-> 在平均情况下，它表现得像一个线性算法，但在最坏情况下，它可能接近于 O(n^2)。在理想情况下，如果每次都能有效地将问题规模减半，它的时间复杂度为 O(n log n)。

@@ -1,4 +1,4 @@
-package com.shain.dp.array;
+package com.shain.dp.array.hoseRobber;
 
 public class HouseRobber2_L213 {
     public static void main(String[] args) {
@@ -38,6 +38,8 @@ public class HouseRobber2_L213 {
         // 两个for循环中的i， "都是指向dp的指针， 而非nums"
         // 第一for， 循环dp1， 由于第0家可偷， 所以对应nums为 nums[0-n-1], dp1的i指针正好与nums中的指针一样， 即dp1[0] 指向的正好是nums[0]
         // 第二个for， 循环dp2, 从第1家开始头， 对应nums为[1-n]， 即dp2[0] 对应这 nums[1]， 所以第二个for中的i，对应这第i+1个nums元素。
+
+        // update 26/06/2023: for中的i还是对应 nums 好理解点， 这里没改， 看leetcode提交记录把。都一样但是反正。
         for (int i = 2; i < nums.length - 1; i++) {
             dp1[i] = Math.max(dp1[i - 2] + nums[i], dp1[i - 1]);
         }

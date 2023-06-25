@@ -4,10 +4,46 @@ import java.util.Arrays;
 
 public class TargetSum_L494 {
     public static void main(String[] args) {
-        System.out.println(findTargetSumWays(new int[]{1}, 1));
+        System.out.println(findTargetSumWays(new int[]{0, 0}, 0));
     }
 
     /**
+     * update at 25/06/2023:
+     *
+     * 1. 首先， 这道题在正常拿过来的情况下， 你至少应该意识到它是一道 0-1 背包问题；
+     *     why？ 因为问题形式为： 在 数组 0-i 区间内， 你能否得到和为target的组合， 并且每个元素只能选择一次。
+     *
+     * 2. 那么， 在意识到0-1 背包以后， 自然你应该想到， dp 数组 的每个格子意义为： 0-i 区间内能不能得到 sum=j 的组合 （这道题记录的是个数，而非true false， 但是我们暂时忽略这个问题）
+     *
+     * 3. 好， 那么对于这道题来说， 我们当然可以初始化数组 行数为 nums.length； 但是你会意识到， 对于第一行元素， 即区间 0-0， 数组中的第一个 1， 他有两种可能和， -> 1 & -1, 但是
+     *    数组的下标只能表示正数， 你无法记录 dp[0][-1] = true, 那怎么办？ 你想到将 "整个坐标轴平移"， 即 将dp的列数 从 "sum 变成 2* sum"， 相当与将 j 与 sum 值进行了一个映射。
+     *
+     *    这个思路没错， 而且能做 （have some details need to be noticed though）
+     *
+     * 法2：
+     *
+     *   You had the feeling that this question might be able to do some tricky conversions to make it simpler, which is good.
+     *   这个转换方法，就是原本以下这一长串题解， 写的略麻烦， 其实很简单。
+     *   你有一串1  [1,1,1,1,1,1]   每个 1 前面可以是 +， -    你的目标就是添加正负号， 计算等于 target 的组合数量。 那么你实际就是将 所有的 1 分成了两组。
+     *   一组都是 +号， 一组都是 -号。 即：
+     *
+     *   (1 + 1 + 1+...) + (-1 -1 -1 -1 ... ) = target
+     *
+     *   提个负号：
+     *
+     *   (1 + 1 + 1 + ... ) - (1 + 1 + 1...) = target
+     *
+     *   发现没有， 现在两组 1 都是 正号了。 相当于： Sum(positive) - Sum(negative) = target. 且 Sp, Sn 都是正数。
+     *   并且： "两组1 的总个数就是数组中 所有1 的总个数" which means Sp + Sn = Sum(nums)
+     *
+     *   进而 Sp = Sum - Sn
+     *   又因为 Sp - Sn = target
+     *
+     *   => Sum - Sn - Sn = target => Sum - 2Sn = target => sn = (Sum-target) / 2
+     *
+     *   至此， 问题转化成了一个 正常的 0-1， 你无需再像方法1 一样增大dp数组的长度。
+     *
+     *
      * key point:
      * 1. 首先正常思考dp方程， you will notice that to calculate dp[i][j], you would need value of dp[i][j-n] and dp[i][j+n],
      * which is not possible to get all of them, because you can only update the dp array from one direction.
@@ -22,7 +58,7 @@ public class TargetSum_L494 {
      * eq1. sum[positive] + sum[negative] = target, where sum[p]>0, sum[n]< 0.
      * <p>
      * This equals to:
-     * eq1.1 sum[p]-sum[n] = target. 注意， 此时， sum[n] 已经变成了正数。 这一转换相当于 1 + (-1+-1) = 1 - (1+1)
+     * eq1.1 sum[p]-sum[negative] = target. 注意， 此时， sum[negative] 已经变成了正数。 这一转换相当于 1 + (-1+-1) = 1 - (1+1)
      * <p>
      * Now you can get:
      * eq1.2 sum[p] = target + sum[n] (NOTE: 此时 sP, sN 均 > 0)
@@ -57,9 +93,42 @@ public class TargetSum_L494 {
      * 因此需要初始化dp为n+1行， 第0行代表不选则元素， 那么不选择元素， 得到和为0， 则只有一种可能性。
      *
      * @param nums
-     * @param target
+     * @param
      * @return
      */
+
+    public static int findTargetSumWays_m2(int[] nums, int s) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        // 绝对值范围超过了sum的绝对值范围则无法得到
+        if (Math.abs(s) > Math.abs(sum)) return 0;
+
+        int len = nums.length;
+        // - 0 +
+        int t = sum * 2 + 1;
+        int[][] dp = new int[len][t];
+        // 初始化
+        if (nums[0] == 0) {
+            dp[0][sum] = 2;
+        } else {
+            dp[0][sum + nums[0]] = 1;
+            dp[0][sum - nums[0]] = 1;
+        }
+
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j < t; j++) {
+                // 边界
+                int l = Math.max((j - nums[i]), 0);
+                int r = (j + nums[i]) < t ? j + nums[i] : 0;
+                dp[i][j] = dp[i - 1][l] + dp[i - 1][r];
+            }
+        }
+        return dp[len - 1][sum + s];
+    }
+
+
     public static int findTargetSumWays(int[] nums, int target) {
         // 这种check has problem, it will wrongly return when input = [1], 1
 //        if ((Arrays.stream(nums).sum() + target) % 2 != 0){

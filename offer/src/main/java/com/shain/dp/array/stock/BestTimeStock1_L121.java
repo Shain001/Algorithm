@@ -22,11 +22,39 @@ public class BestTimeStock1_L121 {
             // 第i天手头持有1股， 两种可能性： 前一天 持有了股票， 当天rest -> dp[i-1][1]; 前一天没持有， 当天买了 -> dp[i-1][0]-prices[i] -> wrong: should be 0-prices[i]
             // Why Wrong? 因为题目要求只能交易一次， dp[i-1][0]-prices[i] 相当于不限买卖次数， 为什么？ 因为dp[i-1][0] 可能由两种状态转移而来， 一种是i-2没买， i-1也没买
             // 另一种是 i-2 买了， i-1这一天卖了， you see? 如果买过了就不能再买了， 所以当要求只能买卖一次时， dp[i][1] （第i天持有1股） 只有两种可能： 前一天就持有了， 今天不卖， 以及之前'一直'没持有， 今天第一次买
+            // 那么为什么 line21 也依赖了 dp[i-1] 的状态， 却不代表多次交易？ 因为只要此处我们把 dp[i-1][1] 转移过来的可能方式限制住以后， dp[i][0]也就限制住了。
             // PS: this is what stock 2 mean, and passed after submitted
 //            dp[i][1] = Math.max(dp[i-1][1], dp[i-1][0] - prices[i]);
             dp[i][1] = Math.max(dp[i - 1][1], 0 - prices[i]);
         }
 
         return dp[dp.length - 1][0];
+    }
+
+    public int maxProfit_simplified(int[] prices) {
+        int noStock = 0;
+        int hasStock = -prices[0];
+
+        for (int i = 1; i < prices.length; i++) {
+            noStock = Math.max(noStock, hasStock + prices[i]);
+            hasStock = Math.max(hasStock, -prices[i]);
+        }
+
+        return noStock;
+
+
+    }
+
+    public int maxProfit_greedy(int[] prices) {
+        int curMin = Integer.MAX_VALUE;
+        int result = 0;
+
+        for (Integer n : prices) {
+            curMin = Math.min(n, curMin);
+
+            result = Math.max(result, n - curMin);
+        }
+
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.oneString;
+package com.shain.dp.string.oneString;
 
 public class LongestValidParentheses_L32 {
     public static void main(String[] args) {

@@ -1,5 +1,8 @@
-package com.shain.dp.array;
+package com.shain.dp.array.subArray;
 
+/**
+ * 这题也是跟 L300  一样， 注意dp数组的含义是 "以i 结尾的连续子数组的最大和， 而不是 0-i 之间的连续子数组最大和"。
+ */
 public class MaximumSubarray_L53 {
     public int maxSubArray(int[] nums) {
         int[] dp = new int[nums.length];

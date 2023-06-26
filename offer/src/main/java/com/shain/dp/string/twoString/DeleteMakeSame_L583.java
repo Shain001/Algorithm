@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.twoString;
+package com.shain.dp.string.twoString;
 
 public class DeleteMakeSame_L583 {
     public static void main(String[] args) {

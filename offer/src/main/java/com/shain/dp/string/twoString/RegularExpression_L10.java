@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.twoString;
+package com.shain.dp.string.twoString;
 
 public class RegularExpression_L10 {
     public boolean isMatch(String s, String p) {

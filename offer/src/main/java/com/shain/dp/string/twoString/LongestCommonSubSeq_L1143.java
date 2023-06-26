@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.twoString;
+package com.shain.dp.string.twoString;
 
 public class LongestCommonSubSeq_L1143 {
     public static void main(String[] args) {
@@ -16,7 +16,7 @@ public class LongestCommonSubSeq_L1143 {
 
                 char t1 = text1.charAt(i - 1);
                 char t2 = text2.charAt(j - 1);
-                if (t1 == t2 && dp[i][j - 1] < i) {
+                if (t1 == t2) {
                     // wrong:
 //                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]) + 1;
                     // 如果相等，则两个字符都应该加入公共子序列

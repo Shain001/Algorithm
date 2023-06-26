@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.twoString;
+package com.shain.dp.string.twoString;
 
 public class MinimumASC_L712 {
     public int minimumDeleteSum(String s1, String s2) {

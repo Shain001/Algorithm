@@ -1,4 +1,4 @@
-package com.shain.dp.twoPointer.oneString;
+package com.shain.dp.string.oneString;
 
 public class LongestPalindrome_L5 {
     private static int max = 1;

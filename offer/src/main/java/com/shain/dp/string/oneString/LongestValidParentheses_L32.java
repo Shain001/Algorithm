@@ -5,6 +5,7 @@ public class LongestValidParentheses_L32 {
         LongestValidParentheses_L32 test = new LongestValidParentheses_L32();
         System.out.println(test.longestValidParentheses("(()"));
     }
+
     public int longestValidParentheses(String s) {
         if (s == null || s.length() == 0) {
             return 0;

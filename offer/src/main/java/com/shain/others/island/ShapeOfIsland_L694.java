@@ -25,7 +25,7 @@ public class ShapeOfIsland_L694 {
     }
 
     private void traverse(int i, int j, StringBuilder sb, int direction) {
-        if ( i < 0 || i > grid.length-1 || j < 0 || j > grid[0].length-1) {
+        if (i < 0 || i > grid.length - 1 || j < 0 || j > grid[0].length - 1) {
             return;
         }
 
@@ -37,10 +37,10 @@ public class ShapeOfIsland_L694 {
 
         grid[i][j] = 0;
 
-        traverse(i-1, j,sb, 1);
-        traverse(i+1, j,sb, 2);
-        traverse(i, j-1,sb, 3);
-        traverse(i, j+1,sb, 4);
+        traverse(i - 1, j, sb, 1);
+        traverse(i + 1, j, sb, 2);
+        traverse(i, j - 1, sb, 3);
+        traverse(i, j + 1, sb, 4);
 
         // 回溯位置也许进行序列化
         sb.append(-direction);

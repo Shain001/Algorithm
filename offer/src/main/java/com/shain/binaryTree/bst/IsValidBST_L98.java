@@ -8,7 +8,7 @@ public class IsValidBST_L98 {
     }
 
     public boolean doCheck(TreeNode root, Integer min, Integer max) {
-        if(root == null) {
+        if (root == null) {
             return true;
         }
 

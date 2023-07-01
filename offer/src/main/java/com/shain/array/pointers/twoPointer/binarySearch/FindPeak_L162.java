@@ -13,7 +13,7 @@ public class FindPeak_L162 {
             int mid = left + (right - left) / 2;
 
             // 注意， 这里是与 mid+1 比， 而不是right， 相当于二分的作用仅仅是找到"某一个山的最高值"， 二分的作用是跨过爬山的阶段。
-            if (nums[mid] < nums[mid+1])
+            if (nums[mid] < nums[mid + 1])
                 left = mid + 1;
             else
                 right = mid;

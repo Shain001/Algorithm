@@ -4,6 +4,7 @@ import com.shain.common.tree.TreeNode;
 
 public class SumOfLeafNode_404 {
     private int result = 0;
+
     public int sumOfLeftLeaves(TreeNode root) {
         if (root == null) {
             return 0;
@@ -13,7 +14,7 @@ public class SumOfLeafNode_404 {
     }
 
     private void doTraverse(TreeNode root) {
-        if (root == null){
+        if (root == null) {
             return;
         }
         if (root.left != null && root.left.left == null && root.left.right == null) {

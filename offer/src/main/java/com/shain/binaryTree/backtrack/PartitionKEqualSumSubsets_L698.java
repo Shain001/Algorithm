@@ -1,8 +1,6 @@
 package com.shain.binaryTree.backtrack;
 
-import javax.swing.plaf.IconUIResource;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 public class PartitionKEqualSumSubsets_L698 {
     private int[] nums;
@@ -13,7 +11,7 @@ public class PartitionKEqualSumSubsets_L698 {
 
     public static void main(String[] args) {
         PartitionKEqualSumSubsets_L698 test = new PartitionKEqualSumSubsets_L698();
-        System.out.println(test.canPartitionKSubsets(new int[]{4,3,2,3,5,2,1}, 4));
+        System.out.println(test.canPartitionKSubsets(new int[]{4, 3, 2, 3, 5, 2, 1}, 4));
     }
 
 
@@ -28,7 +26,7 @@ public class PartitionKEqualSumSubsets_L698 {
             return result;
         }
 
-        int left = 0, right= nums.length - 1;
+        int left = 0, right = nums.length - 1;
 
         // 优化1： 将数组降序, 提高剪枝命中率
         Arrays.sort(nums);
@@ -41,7 +39,7 @@ public class PartitionKEqualSumSubsets_L698 {
         }
 
 
-        this.target = sum/k;
+        this.target = sum / k;
 
         backTrack_v2(0);
         return result;
@@ -57,7 +55,7 @@ public class PartitionKEqualSumSubsets_L698 {
             int tempSum = bucket[i] + nums[curNum];
 
             // 两个相邻的桶想等时， 无需在将当前球放到当前桶
-            if (i > 0 && bucket[i-1] == bucket[i]) {
+            if (i > 0 && bucket[i - 1] == bucket[i]) {
                 continue;
             }
             if (tempSum > target) {
@@ -65,7 +63,7 @@ public class PartitionKEqualSumSubsets_L698 {
             }
 
             bucket[i] += nums[curNum];
-            backTrack_v2(curNum+1);
+            backTrack_v2(curNum + 1);
             bucket[i] -= nums[curNum];
         }
 

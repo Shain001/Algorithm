@@ -25,25 +25,25 @@ public class PalindromePartition_L131 {
 
         for (int len = 1; start + len <= s.length(); len++) {
 
-            int end = start+len-1;
+            int end = start + len - 1;
 
-            if (start+1 < end-1 && !dp[start + 1][end - 1]) {
+            if (start + 1 < end - 1 && !dp[start + 1][end - 1]) {
                 continue;
             }
 
-            String cur = s.substring(start, end+1);
+            String cur = s.substring(start, end + 1);
 
             if (!isPalindrome(start, end)) {
                 continue;
             }
             dp[start][end] = true;
             path.add(cur);
-            backTrack(path, start+len);
+            backTrack(path, start + len);
             path.removeLast();
         }
     }
 
-    private  boolean isPalindrome(int start, int end) {
+    private boolean isPalindrome(int start, int end) {
         return s.charAt(start) == s.charAt(end);
     }
 

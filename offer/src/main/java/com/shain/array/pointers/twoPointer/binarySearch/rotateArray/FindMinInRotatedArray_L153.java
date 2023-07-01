@@ -2,7 +2,7 @@ package com.shain.array.pointers.twoPointer.binarySearch.rotateArray;
 
 public class FindMinInRotatedArray_L153 {
     public static void main(String[] args) {
-        int[] test = new int[]{3,4,5,1,2};
+        int[] test = new int[]{3, 4, 5, 1, 2};
         System.out.println(findMin(test));
     }
 

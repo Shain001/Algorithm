@@ -8,7 +8,7 @@ public class CountSubIsland_L1905 {
      * 这个思路是 比较两个岛屿想不想等。
      * 这个思路更有写的价值， 另一个方法跟别的题是一样的， copy paste改一改就能过。
      * 这里注意， compare方法中的注释。
-     *
+     * <p>
      * 另一个方法是 找到不可能是subiland的 grid1 中的区域， 将其全部变0， 然后数剩下的还是1 的区域。 which is similar to other questions.
      *
      * @param grid1
@@ -32,7 +32,7 @@ public class CountSubIsland_L1905 {
     }
 
     public boolean compare(int i, int j) {
-        if (i < 0 || i > grid1.length-1 || j < 0 || j > grid1[0].length-1) {
+        if (i < 0 || i > grid1.length - 1 || j < 0 || j > grid1[0].length - 1) {
             return true;
         }
 
@@ -43,7 +43,7 @@ public class CountSubIsland_L1905 {
         boolean flag = true;
 
         // 同理， 这里也不能直接返回false， 会导致有的相邻的1 没有消除
-        if (grid2[i][j] == 1 && grid1[i][j] == 0){
+        if (grid2[i][j] == 1 && grid1[i][j] == 0) {
             flag = false;
         }
 
@@ -52,10 +52,10 @@ public class CountSubIsland_L1905 {
 
         // 此处一定要这么写， 不能写成 return compare() && compare ...
         // 因为像那么写的话， 当第一个compare返回false， 后面的compare就不会执行了， 导致无法把grid2 中所有相邻的1 都消除。
-        boolean up = compare(i, j+1);
-        boolean down = compare(i, j-1);
-        boolean left = compare(i-1, j);
-        boolean right = compare(i+1, j);
+        boolean up = compare(i, j + 1);
+        boolean down = compare(i, j - 1);
+        boolean left = compare(i - 1, j);
+        boolean right = compare(i + 1, j);
 
         return flag && up && down && left && right;
     }

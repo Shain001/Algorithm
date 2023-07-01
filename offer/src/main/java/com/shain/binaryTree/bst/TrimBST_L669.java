@@ -17,7 +17,7 @@ public class TrimBST_L669 {
             root.left = left;
             root.right = right;
             return root;
-        } else if (root.val < low){ // 如果当前节点值<low, 代表所有左子树都不再可能合法， 直接返回修剪以后的 右子树的头节点/
+        } else if (root.val < low) { // 如果当前节点值<low, 代表所有左子树都不再可能合法， 直接返回修剪以后的 右子树的头节点/
             return trimBST(root.right, low, high);
         } else {
             return trimBST(root.left, low, high); // 同理

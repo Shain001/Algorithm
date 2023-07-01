@@ -19,7 +19,7 @@ public class IsSymmetric_L101 {
             return false;
         }
 
-        if (left.val != right.val){
+        if (left.val != right.val) {
             return false;
         }
 

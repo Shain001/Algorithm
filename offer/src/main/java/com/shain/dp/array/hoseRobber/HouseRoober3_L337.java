@@ -10,7 +10,7 @@ public class HouseRoober3_L337 {
     // i=0 -> curNode Max; i=1 -> prev max
     public int[] getMaximum(TreeNode root) {
         if (root == null) {
-            return new int[]{0,0};
+            return new int[]{0, 0};
         }
 
         int[] leftMaxes = getMaximum(root.left);

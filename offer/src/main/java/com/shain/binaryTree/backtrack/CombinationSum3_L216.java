@@ -31,7 +31,7 @@ public class CombinationSum3_L216 {
                 break;
             curSum += i;
             path.add(i);
-            backTrack(curSum, path, i+1);
+            backTrack(curSum, path, i + 1);
             curSum -= i;
             path.removeLast();
         }

@@ -23,7 +23,7 @@ public class Combination_L77 {
         }
 
         for (int i = start; i <= n; i++) {
-            if (n-i+1 < k-path.size())
+            if (n - i + 1 < k - path.size())
                 break;
             path.add(i);
             backTrack(path, i + 1);

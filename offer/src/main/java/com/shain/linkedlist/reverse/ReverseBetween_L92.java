@@ -6,6 +6,7 @@ import static com.shain.linkedlist.reverse.ReverseFirstN.reverseN;
 
 public class ReverseBetween_L92 {
     private ListNode newTail;
+    private ListNode tail;
 
     public static void main(String[] args) {
     }
@@ -35,7 +36,7 @@ public class ReverseBetween_L92 {
 
         // 1. 找到left节点的前一个节点
         ListNode h = dummyHead;
-        while (count < left-1) {
+        while (count < left - 1) {
             h = h.next;
             count++;
         }
@@ -45,13 +46,11 @@ public class ReverseBetween_L92 {
         // 4. 返回反转后的新的头节点， 将 乐翻天节点的头一个节点 next 指向 反转后返回的头节点。
         ListNode originalLeft = h.next;
 
-        h.next = doReverseK(originalLeft, right-left+1);
+        h.next = doReverseK(originalLeft, right - left + 1);
 
 
         return dummyHead.next;
     }
-
-    private ListNode tail;
 
     private ListNode doReverseK(ListNode head, int k) {
         if (k == 1) {
@@ -59,7 +58,7 @@ public class ReverseBetween_L92 {
             return head;
         }
 
-        ListNode reversedHead = doReverseK(head.next, k-1);
+        ListNode reversedHead = doReverseK(head.next, k - 1);
         head.next.next = head;
         head.next = tail;
 

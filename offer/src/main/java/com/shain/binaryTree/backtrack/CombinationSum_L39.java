@@ -8,6 +8,7 @@ public class CombinationSum_L39 {
     private List<List<Integer>> result = new ArrayList<>();
     private int[] candidates;
     private int target;
+
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         this.candidates = candidates;
         this.target = target;
@@ -15,7 +16,7 @@ public class CombinationSum_L39 {
         return result;
     }
 
-    public void backtrack(LinkedList<Integer> path, int curSum, int start){
+    public void backtrack(LinkedList<Integer> path, int curSum, int start) {
         if (curSum == target) {
             result.add(new ArrayList<Integer>(path));
             return;

@@ -3,8 +3,9 @@ package com.shain.array.pivot;
 public class FinkKthInTwoArrary_L4 {
     public static void main(String[] args) {
         var test = new FinkKthInTwoArrary_L4();
-        System.out.println(test.findMedianSortedArrays(new int[]{1}, new int[]{-1,3,4,9,11,15,80,99}));
+        System.out.println(test.findMedianSortedArrays(new int[]{1}, new int[]{-1, 3, 4, 9, 11, 15, 80, 99}));
     }
+
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int len = nums2.length + nums1.length;
 

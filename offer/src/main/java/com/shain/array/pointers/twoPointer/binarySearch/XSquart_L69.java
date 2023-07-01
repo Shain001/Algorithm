@@ -8,10 +8,10 @@ public class XSquart_L69 {
         while (left < right) {
             long mid = left + (right - left) / 2 + 1;
 
-            if ( mid <= x/mid)
+            if (mid <= x / mid)
                 left = (int) mid;
             else
-                right = (int) mid-1;
+                right = (int) mid - 1;
         }
 
         return left;

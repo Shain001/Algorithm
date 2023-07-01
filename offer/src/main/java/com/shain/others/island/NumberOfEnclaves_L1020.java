@@ -5,17 +5,18 @@ package com.shain.others.island;
  */
 public class NumberOfEnclaves_L1020 {
     private int[][] grid;
+
     public int numEnclaves(int[][] grid) {
         this.grid = grid;
 
         for (int i = 0; i < grid.length; i++) {
             traverse(i, 0);
-            traverse(i, grid[0].length-1);
+            traverse(i, grid[0].length - 1);
         }
 
         for (int j = 0; j < grid[0].length; j++) {
             traverse(0, j);
-            traverse(grid.length-1, j);
+            traverse(grid.length - 1, j);
         }
 
         int count = 0;
@@ -32,7 +33,7 @@ public class NumberOfEnclaves_L1020 {
     }
 
     private void traverse(int i, int j) {
-        if (i< 0 || i > grid.length-1 || j < 0 || j > grid[0].length-1) {
+        if (i < 0 || i > grid.length - 1 || j < 0 || j > grid[0].length - 1) {
             return;
         }
 
@@ -42,10 +43,10 @@ public class NumberOfEnclaves_L1020 {
 
         grid[i][j] = 0;
 
-        traverse(i, j-1);
-        traverse(i, j+1);
-        traverse(i-1, j);
-        traverse(i+1, j);
+        traverse(i, j - 1);
+        traverse(i, j + 1);
+        traverse(i - 1, j);
+        traverse(i + 1, j);
 
     }
 }

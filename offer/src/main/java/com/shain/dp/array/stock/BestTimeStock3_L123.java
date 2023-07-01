@@ -24,16 +24,16 @@ public class BestTimeStock3_L123 {
             // 第i天 第一次持有0股, 即到了第i天还没买卖
             dp[i][0] = 0;
             // 第一次买 -> 第一次持有1股， 可能来自于： 前一天就持有1股， 或者今天第一次买。
-            dp[i][1] = Math.max(dp[i-1][1], dp[i-1][0] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i]);
             // 第一次卖 -> 第2次持有0股， 即已经买过一次 -> 前一天就 第1次持有0股了， 或者 今天 第一次卖。
-            dp[i][2] = Math.max(dp[i-1][2], dp[i-1][1] + prices[i]);
+            dp[i][2] = Math.max(dp[i - 1][2], dp[i - 1][1] + prices[i]);
             // 第二次买 -> 第2次持有1股， 即之前已经 买卖过一次， 则： 前一天就已经第二次持有1股， 或 今天是第2次买；
-            dp[i][3] = Math.max(dp[i-1][3], dp[i-1][2] - prices[i]);
+            dp[i][3] = Math.max(dp[i - 1][3], dp[i - 1][2] - prices[i]);
             // 第二次卖 -> 第3次持有0股， 即两次买卖结束， 则： 前一天就已经买卖结束（已经第二次持有1股）， 或今天刚卖
-            dp[i][4] = Math.max(dp[i-1][4], dp[i-1][3] + prices[i]);
+            dp[i][4] = Math.max(dp[i - 1][4], dp[i - 1][3] + prices[i]);
         }
 
-        return dp[dp.length-1][4];
+        return dp[dp.length - 1][4];
 
     }
 }

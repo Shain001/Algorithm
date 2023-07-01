@@ -22,6 +22,7 @@ public class ReorderList_L143 {
         test.reorderList(head);
         System.out.println(head);
     }
+
     public void reorderList(ListNode head) {
         // 1. find the middle of the linkedList
         ListNode middle = getHeadOfLastHalf(head);

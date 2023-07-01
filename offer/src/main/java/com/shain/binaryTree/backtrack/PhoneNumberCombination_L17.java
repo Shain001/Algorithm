@@ -25,7 +25,7 @@ public class PhoneNumberCombination_L17 {
 
     public void backTrack(String digits, int level, StringBuilder path) {
         if (level == digits.length()) {
-            if (path.length()!=0)
+            if (path.length() != 0)
                 res.add(path.toString());
             return;
         }
@@ -34,8 +34,8 @@ public class PhoneNumberCombination_L17 {
 
         for (int i = 0; i < curLevelNodes.length; i++) {
             path.append(curLevelNodes[i]);
-            backTrack(digits, level+1, path);
-            path.deleteCharAt(path.length()-1);
+            backTrack(digits, level + 1, path);
+            path.deleteCharAt(path.length() - 1);
         }
     }
 }

@@ -27,7 +27,7 @@ public class Permutations_L46 {
             path.add(nums[i]);
             used[i] = true;
             backtrack(path, used);
-            path.remove(path.size()-1);
+            path.remove(path.size() - 1);
             used[i] = false;
         }
     }

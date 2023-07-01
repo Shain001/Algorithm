@@ -3,22 +3,22 @@ package com.shain.array.pivot;
 public class KthLargest_L215 {
     public static void main(String[] args) {
         var test = new KthLargest_L215();
-        System.out.println(test.findKthLargest(new int[]{3,2,1,5,6,4}, 2));
+        System.out.println(test.findKthLargest(new int[]{3, 2, 1, 5, 6, 4}, 2));
     }
 
 
     public int findKthLargest(int[] nums, int k) {
         int index = -1;
         int left = 0;
-        int right = nums.length-1;
-        while (index != nums.length-k) {
+        int right = nums.length - 1;
+        while (index != nums.length - k) {
             index = getPivot(nums, left, right);
 
             // 必要， 否则死循环
-            if (index < nums.length-k+1) {
-                left = index+1;
+            if (index < nums.length - k + 1) {
+                left = index + 1;
             } else
-                right = index-1;
+                right = index - 1;
 
         }
 

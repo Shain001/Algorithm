@@ -19,7 +19,7 @@ public class NumberOfIsland_200 {
     }
 
     private void traverse(int i, int j) {
-        if ( i < 0 || i > grid.length-1 || j < 0 || j > grid[0].length-1) {
+        if (i < 0 || i > grid.length - 1 || j < 0 || j > grid[0].length - 1) {
             return;
         }
 
@@ -28,9 +28,9 @@ public class NumberOfIsland_200 {
 
         grid[i][j] = '0';
 
-        traverse(i-1, j);
-        traverse(i+1, j);
-        traverse(i, j-1);
-        traverse(i, j+1);
+        traverse(i - 1, j);
+        traverse(i + 1, j);
+        traverse(i, j - 1);
+        traverse(i, j + 1);
     }
 }

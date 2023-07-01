@@ -25,12 +25,12 @@ public class Search2dArrary_L74 {
 
     private int getTargetLen(int[][] matrix, int target) {
         int up = 0;
-        int down = matrix.length-1;
+        int down = matrix.length - 1;
 
         while (up < down) {
             int mid = up + (down - up + 1) / 2;
 
-            if (matrix[mid][0] == target){
+            if (matrix[mid][0] == target) {
                 up = mid;
                 break;
             }

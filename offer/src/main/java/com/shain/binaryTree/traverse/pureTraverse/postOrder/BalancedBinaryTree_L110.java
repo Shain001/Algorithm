@@ -4,7 +4,7 @@ import com.shain.common.tree.TreeNode;
 
 public class BalancedBinaryTree_L110 {
     public boolean isBalanced(TreeNode root) {
-        return getHeight(root) == -1? false: true;
+        return getHeight(root) == -1 ? false : true;
     }
 
     // 返回以当前节点为根节点的 树的最大高度， 并且检查左右子树的高度差是否<1
@@ -20,6 +20,6 @@ public class BalancedBinaryTree_L110 {
         if (left == -1 || right == -1)
             return -1;
 
-        return Math.abs(left - right) > 1? -1: 1 + Math.max(left, right);
+        return Math.abs(left - right) > 1 ? -1 : 1 + Math.max(left, right);
     }
 }

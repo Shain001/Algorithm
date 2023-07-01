@@ -44,11 +44,11 @@ public class BestTimeStockColdDown_L309 {
 
         for (int i = 2; i < prices.length; i++) {
             // 注意， 卖的时候是不会被冷冻期限制的， 所以应该是 dp[i-1][1] + prices[i]， 而不是dp[i-2][1] + prices[i]
-            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1] + prices[i]);
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
             // 冷冻期只会影响买入操作。
-            dp[i][1] = Math.max(dp[i-1][1], dp[i-2][0] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 2][0] - prices[i]);
         }
 
-        return dp[prices.length-1][0];
+        return dp[prices.length - 1][0];
     }
 }

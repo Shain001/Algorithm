@@ -16,11 +16,11 @@ public class TwoQueueStack_L225 {
     public void push(int x) {
         helper.offer(x);
 
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             helper.offer(queue.poll());
         }
 
-        while(!helper.isEmpty()) {
+        while (!helper.isEmpty()) {
             queue.offer(helper.poll());
         }
 
@@ -33,7 +33,7 @@ public class TwoQueueStack_L225 {
     }
 
     public int top() {
-        return this.empty()? -1: queue.peek();
+        return this.empty() ? -1 : queue.peek();
     }
 
     public boolean empty() {

@@ -17,7 +17,7 @@ public class DistinctSubsequences_L115 {
 
         // 假设 s = "rabbbit" 且 target = "rabbit"。
 
-        // 当 i = 4 (s 的字符是 b) 和 j = 3 (target 的字符是 b) 时，我们有两种选择：
+        // 当 i = 4 (s 的字符是 b) 和 j = 3 (target 的字符是 b) 时，rabb / rab 我们有两种选择：
 
         // 包含 s 的第 4 个字符：在 s 的前 3 个字符 "rab" 中有 1 个 "rab" 等于 target 的前 2 个字符 "ra" 的子序列。
         // 不包含 s 的第 4 个字符：在 s 的前 3 个字符 "rab" 中有 1 个 "rab" 等于 target 的前 3 个字符 "rab" 的子序列。

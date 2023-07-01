@@ -29,6 +29,7 @@ public class FindDuplicateSubtrees_L652 {
         String rightVal = getSerializedTree(root.right);
 
         // NOTE: Here, "," is necessary, otherwise the serialization cannot uniquely identify a tree!
+        // 比如 curVal = 12, nextVal = 4, 不加逗号变成了 124， 你不知道 哪个节点是 12， 哪个节点是4
         String curVal = root.val + "," + leftVal + "," + rightVal;
 
         if (occurred.getOrDefault(curVal, 0) == 1) {

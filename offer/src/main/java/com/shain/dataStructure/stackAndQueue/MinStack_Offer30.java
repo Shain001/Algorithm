@@ -1,4 +1,4 @@
-package com.shain.stackAndQueue;
+package com.shain.dataStructure.stackAndQueue;
 
 import java.util.Stack;
 

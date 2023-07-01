@@ -1,4 +1,4 @@
-package com.shain.dp.pathSum.bottomUpTraverse;
+package com.shain.dp.pathSum_actuallyTree.bottomUpTraverse;
 
 import com.shain.common.tree.TreeNode;
 

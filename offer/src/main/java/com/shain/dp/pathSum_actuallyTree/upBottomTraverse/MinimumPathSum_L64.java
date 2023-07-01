@@ -1,4 +1,4 @@
-package com.shain.dp.pathSum.upBottomTraverse;
+package com.shain.dp.pathSum_actuallyTree.upBottomTraverse;
 
 public class MinimumPathSum_L64 {
     public static void main(String[] args) {

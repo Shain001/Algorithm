@@ -10,7 +10,7 @@ public class LCA2_1644 {
         // wrong version.
         // The point of the "LOWEST" common ancestor, means "have to do post-order traverse", i.e. you have to check the
         // roots from bottom to up.
-        // If you use post-order, then you can find the ancestor, but it's not gonna be the lowest one,
+        // If you use pre-order, then you can find the ancestor, but it's not gonna be the lowest one,
         // it will always be the root node.
 //        if (containsNode(root, p) && containsNode(root, q))
 //            return root;

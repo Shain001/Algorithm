@@ -1,4 +1,4 @@
-package com.shain.dataStructure;
+package com.shain.dataStructure.pq;
 
 import java.util.PriorityQueue;
 

@@ -1,4 +1,4 @@
-package com.shain.dp.pathSum.bottomUpTraverse;
+package com.shain.dp.pathSum_actuallyTree.bottomUpTraverse;
 
 public class DungeionGame_L174 {
     public static void main(String[] args) {

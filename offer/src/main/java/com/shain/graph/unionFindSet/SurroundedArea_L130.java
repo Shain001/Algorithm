@@ -13,7 +13,7 @@ public class SurroundedArea_L130 {
         int r = board.length;
         int c = board[0].length;
 
-        // +1 因为assum 边界上的 0 的跟为虚拟节点， 为计算方便， 以uf中parent的最后一位记为 虚拟节点， 使得所有边界上的0与虚拟节点union。
+        // +1 因为assume 边界上的 0 的跟为虚拟节。 为计算方便， 以uf中parent的最后一位记为 虚拟节点， 使得所有边界上的0与虚拟节点union。
         UnionFind uf = new UnionFind(r*c + 1);
 
         for (int i = 0; i < r; i++) {

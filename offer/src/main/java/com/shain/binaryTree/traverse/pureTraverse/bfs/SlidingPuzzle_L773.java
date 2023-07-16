@@ -10,6 +10,8 @@ import java.util.Set;
  * 唯一tricky在于将board转成一维， 然后发现是bfs问题。
  * 为了能够在 flatten以后交换0与原先二维数组中的neighbor， 需要通过一个二维数组记录邻居在一维数组中的index， 而由于输入永远是2x3 的数组， 所以
  * 这些index是固定的
+ *
+ * todo: time complexity, A* method solution, 康拓展开
  */
 public class SlidingPuzzle_L773 {
     private int[][] neighbors = {{1, 3}, {0, 2, 4}, {1, 5}, {0, 4}, {1, 3, 5}, {2, 4}};

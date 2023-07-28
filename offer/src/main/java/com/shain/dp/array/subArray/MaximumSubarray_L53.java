@@ -2,6 +2,8 @@ package com.shain.dp.array.subArray;
 
 /**
  * 这题也是跟 L300  一样， 注意dp数组的含义是 "以i 结尾的连续子数组的最大和， 而不是 0-i 之间的连续子数组最大和"。
+ *
+ * 唯一这道题特例， 一般来讲， 只要所求的是"连续的子数组， 则dp含义应该是 从0-i"
  */
 public class MaximumSubarray_L53 {
     public int maxSubArray(int[] nums) {
@@ -77,4 +79,23 @@ public class MaximumSubarray_L53 {
 //        }
 //        return res;
 //    }
+
+    // 27/07/2023 review
+    public int maxSubArray_review(int[] nums) {
+        if (nums.length == 1){
+            return nums[0];
+        }
+
+        int dp = nums[0];
+        int result = dp;
+        int dp1;
+
+        for (int i = 1; i < nums.length; i++) {
+            dp1 = Math.max(dp + nums[i], nums[i]);
+            result = Math.max(dp1, result);
+            dp = dp1;
+        }
+
+        return result;
+    }
 }

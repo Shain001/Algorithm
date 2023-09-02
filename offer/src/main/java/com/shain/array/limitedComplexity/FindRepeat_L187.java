@@ -1,91 +1,106 @@
 package com.shain.array.limitedComplexity;
 
-/**
- * 给定一个包含 n + 1 个整数的数组 nums ，其数字都在 [1, n] 范围内（包括 1 和 n），可知至少存在一个重复的整数。
- * <p>
- * 假设 nums 只有 一个重复的整数 ，返回 这个重复的数 。
- * <p>
- * 你设计的解决方案必须 不修改 数组 nums 且只用常量级 O(1) 的额外空间。
- * <p>
- * method1:
- * 二分。 由于数组长度为 n+1，但是 数字范围为 1-n， 所以必定至少有一个元素重复。
- * 又因为 元素取之范围 与 下标范围可对应， 并且 "数组中的元素虽然无序， 但是数组的下标是有序的"， 所以可以找通过下标寻找答案。
- * <p>
- * method2：
- * 转换为 找环形链表环的入口。
- */
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class FindRepeat_L187 {
+    private static final int L = 10;
+
     public static void main(String[] args) {
         var test = new FindRepeat_L187();
-        System.out.println(test.method2(new int[]{3, 3, 3, 2, 2}));
+//        System.out.println(test.findRepeatedDnaSequences_v2("AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"));
+
+        System.out.println(~5);
     }
-
-    public int findDuplicate(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
-
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            int countMid = doCount(nums, mid);
-
-            // 假设 mid=4， 那么在数组中， 小于等于4的值在没有重复的情况下应该是4个。
-            // 那么假设这个count大于了4个， 说明 在 1-4 这个范围内必定有重复的数字， 所以我们需要在 1-4 的范围查找， 也即找左边的区间。
-            if (countMid > mid) {
-                right = mid;
-            } else
-                left = mid + 1;
-
+    /**
+     * 基础方法， 时间复杂度，空间复杂度均为 O(NL) where N is length of String, L is length of window.
+     * Why O(NL)?
+     * for遍历N次， 每次遍历都要进行substring操作， substring的长度为L， 进而记为O(NL)， 实际上可以取为O(N)， 但是这里强调 NL 的目的为
+     * 理解对其进行的优化
+     *
+     * 空间复杂度为O(NL)好理解， key为String， 共N个key
+     *
+     * 仅用滑动窗口优化？
+     * 没用， 就算加入滑动窗口， 记录窗口内的字符串， 然后将其进行toString, toString 这个操作仍然是O(L)
+     *
+     * e.g.
+     * String windowStr = window.toString();
+     *
+     * 同时这样的方案无法优化空间复杂度到真正的 O(N);
+     * @param s
+     * @return
+     */
+    public List<String> findRepeatedDnaSequences(String s) {
+        List<String> ans = new ArrayList<String>();
+        Map<String, Integer> cnt = new HashMap<String, Integer>();
+        int n = s.length();
+        for (int i = 0; i <= n - L; ++i) {
+            String sub = s.substring(i, i + L);
+            cnt.put(sub, cnt.getOrDefault(sub, 0) + 1);
+            if (cnt.get(sub) == 2) {
+                ans.add(sub);
+            }
         }
-        return left;
-    }
-
-    private int doCount(int[] nums, int mid) {
-        int count = 0;
-
-        for (int i = 0; i <= nums.length - 1; i++) {
-            count = nums[i] <= mid ? count + 1 : count;
-        }
-
-        return count;
+        return ans;
     }
 
     /**
-     * 将 元素值看作指针， 指向下一个节点的下标。
-     * <p>
-     * 这种方法有2个必要前提条件， 即：
-     * 1. 元素的取之范围必须 小于 nums.len， 否则会空指针报错
-     * 2. 必须满足 "最多只有一个重复元素"，但是这个重复元素的出现次数不限。
-     * e.g. [2, 5, 3, 1, 3, 5] 不行， 因为这个数组实际组成了多个环
-     * [2, 5, 3, 3, 3, 4] 可以， 因为尽管3出现了more than 2 times， 还是只有一个环。
-     * <p>
-     * <p>
-     * 换句话说， 只要满足元素 取之范围属于 [1, n] && length = n+1，并且 只有一个重复元素， 则可以使用该算法。
-     * 同时， 如果满足以上条件， 该方法也可用于判断是否有重复元素， 无需返回。 即变成了判断环形链表，而不是找入口。
-     * <p>
-     * 为什么 元素取值范围属于 0-n 不行？ 因为 有0 的话， 可能出现 self-loop的情况， slow pointer可能在进入环之前进入这个self-loop
-     *
-     * @param nums
-     * @return
+     * 利用对字符串进行HASH 来优化。
      */
-    public int method2(int[] nums) {
-        int slow = nums[0];
-        int fast = nums[nums[0]];
+    private int R;
+    public List<String> findRepeatedDnaSequences_v2(String s) {
+        int[] converted = new int[s.length()];
+        Map<Integer, Integer> occured = new HashMap<>();
+        List<String> result = new ArrayList<>();
 
-        while (slow != fast) {
-            slow = nums[slow];
-            fast = nums[nums[fast]];
+        // Since There is only 4 possible values ACGT, 所以是四进制
+        // 注意理解这个hash的过程， 由于只有四种可能的核苷酸值， 所以每一位的值就只有四种可能性。
+        // 也即， 将一个窗口中的字符串， 转换成了一个长度为L的四进制数
+        // 然后又将这个四进制数转换成了十进制的值作为hash
+        // 也即这种方法是将一个字符串， 先转换成一个 R 进制的数字， 再将其转换成10进制保存。
+        R = 4;
+        int i = 0;
+        for (Character c : s.toCharArray()) {
+            switch (c) {
+                case 'A': converted[i++] = 0; break;
+                case 'C': converted[i++] = 1; break;
+                case 'G': converted[i++] = 2; break;
+                case 'T': converted[i++] = 3; break;
+                default: return null;
+            }
         }
 
-        fast = 0;
+        int right = 0;
+        int left = 0;
+        int hash = 0;
+        while (right < s.length()) {
+            hash = addToRight(hash, converted[right]);
+            right++;
 
-        while (slow != fast) {
-            slow = nums[slow];
-            fast = nums[fast];
+            if (right - left == 10) {
+                if (occured.getOrDefault(hash, 0) == 1) {
+                    result.add(s.substring(left, right));
+                }
+                occured.put(hash, occured.getOrDefault(hash, 0) + 1);
+
+                hash = removeFromLeft(hash, converted[left]);
+                left++;
+            }
+
+
+
         }
 
-        return slow;
-
+        return result;
     }
 
+    private int addToRight(int hash, int n) {
+        return hash * R + n;
+    }
 
+    private int removeFromLeft(int hash, int n) {
+        return hash - n * (int) Math.pow(R, L-1);
+    }
 }

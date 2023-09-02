@@ -11,6 +11,35 @@ public class PermutationInString_L567 {
         System.out.println(checkInclusion(s, tar));
     }
 
+    // sliding window + array. check L438 comments if forget
+    public boolean checkInclusion_v2(String s1, String s2) {
+        int[] count = new int[26];
+        for (char c: s1.toCharArray()) {
+            count[c-'a']++;
+        }
+
+        int left = 0;
+        int right = 0;
+
+        while (right < s2.length()) {
+            char cur = s2.charAt(right);
+            count[cur-'a'] -= 1;
+
+            while (count[cur-'a'] < 0) {
+                char leftChar = s2.charAt(left);
+                count[leftChar-'a']++;
+                left++;
+            }
+
+            if (right - left + 1 == s1.length())
+                return true;
+
+            right++;
+        }
+
+        return false;
+    }
+
     public static boolean checkInclusion(String s, String target) {
         int left = 0;
         int right = 0;

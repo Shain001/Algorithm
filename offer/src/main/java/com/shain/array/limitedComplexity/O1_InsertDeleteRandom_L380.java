@@ -34,7 +34,6 @@ public class O1_InsertDeleteRandom_L380 {
         if (!map.containsKey(val))
             return false;
 
-
         int targetIndex = map.remove(val);
         if (targetIndex != curLast) {
             map.put(nums[curLast], targetIndex);

@@ -42,6 +42,7 @@ public class ThreeSum_L15 {
                     j++;
                     k--;
 
+                    // Don't forget this, otherwise would have duplicated results.
                     while (j < k && nums[j] == nums[j - 1]) {
                         j++;
                     }

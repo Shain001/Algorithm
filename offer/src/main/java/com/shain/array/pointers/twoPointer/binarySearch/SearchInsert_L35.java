@@ -5,6 +5,11 @@ package com.shain.array.pointers.twoPointer.binarySearch;
     输出: 1
  */
 public class SearchInsert_L35 {
+    public static void main(String[] args) {
+        var test = new SearchInsert_L35();
+
+        System.out.println(test.searchInsert(new int[]{2,2}, 3));
+    }
     public int searchInsert(int[] nums, int target) {
         int left = 0;
         int right = nums.length - 1;

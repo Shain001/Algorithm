@@ -21,4 +21,25 @@ public class FindPeak_L162 {
 
         return left;
     }
+
+    public static void main(String[] args) {
+        var test = new FindPeak_L162();
+        System.out.println(test.test(new int[]{1,2,4}, 0));
+    }
+    public int test(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length-1;
+
+        while (left < right) {
+            int mid = left + (right-left+1)/2;
+
+            if (nums[mid] <= target)
+                left = mid;
+            else
+                right = mid-1;
+        }
+
+        return left;
+    }
+
 }

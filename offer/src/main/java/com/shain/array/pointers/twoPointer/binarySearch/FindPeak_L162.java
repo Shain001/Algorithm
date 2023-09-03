@@ -22,24 +22,23 @@ public class FindPeak_L162 {
         return left;
     }
 
-    public static void main(String[] args) {
-        var test = new FindPeak_L162();
-        System.out.println(test.test(new int[]{1,2,4}, 0));
-    }
-    public int test(int[] nums, int target) {
+    // return right 也对， 其实return right更好理解。
+    public int findPeakElement_sameVersion(int[] nums) {
         int left = 0;
         int right = nums.length-1;
 
         while (left < right) {
-            int mid = left + (right-left+1)/2;
+            int mid = left + (right-left) /2 ;
 
-            if (nums[mid] <= target)
-                left = mid;
-            else
-                right = mid-1;
+            if (nums[mid] < nums[mid+1]) {
+                left = mid+1;
+            } else {
+                right = mid;
+            }
+
         }
+        return right;
 
-        return left;
     }
 
 }

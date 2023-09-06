@@ -72,8 +72,6 @@ public class RepeatedDNA_L187 {
             // move window
             right++;
         }
-
-
         return result;
     }
 

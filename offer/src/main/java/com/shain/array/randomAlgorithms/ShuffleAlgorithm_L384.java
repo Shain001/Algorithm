@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * todo: 补充随机性证明
+ * todo: 补充随机性证明笔记/blog
  */
 public class ShuffleAlgorithm_L384 {
     private int[] nums;

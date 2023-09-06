@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
+ * 洗牌算法
+ *
  * todo: 补充随机性证明笔记/blog
  */
 public class ShuffleAlgorithm_L384 {

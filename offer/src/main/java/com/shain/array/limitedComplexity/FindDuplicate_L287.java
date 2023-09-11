@@ -13,10 +13,15 @@ package com.shain.array.limitedComplexity;
  * <p>
  * method2：
  * 转换为 找环形链表环的入口。
+ *
+ *
+ * 如何证明 满足这种条件的 数组一定有环？
+ * 我们对 nums 数组建图，每个位置 i 连一条 i→nums[i]的边。由于存在的重复的数字 target，因此 target 这个位置一定有起码两条指向它的边，因此整张图一定存在环。
+ *
  */
-public class FindDuplicate_LDontKnow {
+public class FindDuplicate_L287 {
     public static void main(String[] args) {
-        var test = new FindDuplicate_LDontKnow();
+        var test = new FindDuplicate_L287();
         System.out.println(test.method2(new int[]{3, 3, 3, 2, 2}));
     }
 

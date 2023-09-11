@@ -7,6 +7,7 @@ package com.shain.array.swap;
  * <p>
  * Not allow to modify the input array
  *
+ * 重复， leetcode287
  * @date: 19/02/2023
  */
 public class FindRepeatNumber_2 {

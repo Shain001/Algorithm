@@ -3,6 +3,7 @@ package com.shain.binaryTree.backtrack;
 import java.util.ArrayList;
 import java.util.List;
 
+// todo: 看位运算的优化
 public class NQueens2_L52 {
     private int count = 0;
     private List<StringBuilder> board;

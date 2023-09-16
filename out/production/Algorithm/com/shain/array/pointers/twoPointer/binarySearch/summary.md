@@ -26,6 +26,7 @@
       同时这也是 目前遇到的唯一一个 不能无脑return left 的类型。
     4. 搜索 target 或 比target 大/小的第一个数。 与3 类似， 属于 right = mid / left = mid 的类型， while 中不加 =, 且while中不return， 直接返回left。 
       （其实在while中return理论上应该也是可以的， 但是 不方便， 判断很麻烦）
+    5. 找峰值， L162, 需要题干的条件， while 不加=， 也属于 right = mid / left = mid 类型， 直接返回 left；
 
 总之，
 
@@ -33,9 +34,7 @@
 
 2） 不加 = 则while 外一定再有一次判断， 并且出while时 left必定等于right 
 
-   update： 这一结论2) 仍然可以适用于大部分情况。 但是向上文update中更新的， 这个结论的成立前提是 target 存在于 nums 中。 
-   这里说的 target 一定存在于 nums中， 不仅仅是说 target = 3 存在于 [1,2,3]中， 也包括 在 [1,2,3] 中找第一个 大于等于2.5的数。
-   虽然2.5
+   update： 这一结论2) 仍然可以适用于大部分情况。 但是 searchRight/ searchLeft 除外
 
 3） mid 通常都是 向下取值， 目前可以记住 只有 在搜索 右边届这种情况向上取。 如果到时候想不明白， 举个 极限 input 长度 = 2
 和input长度 = 1 的例子。

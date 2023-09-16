@@ -35,6 +35,10 @@ public class LargestBSTSubtree_L333 {
 
         // 2. Point 2 at line 17
         if (flag && left[0] == 1 && right[0] == 1) {
+            // !!NOTE: 这里的 Math.max 和 Math.min， 其实只在 从最后一层空节点跨越到 叶子节点时发生了作用， 或者换句话说，
+            // 他俩的作用仅仅是初始化 min 和max。
+            // 因为 只要 root为根的tree 满足 flag的条件， 就代表他是合法的bst， 那么 这个bst的最大值， 一定是 right的最大值， 即 right[2]， 最小值一定是 左子树的最小值， 即left[3]
+            // 注意复习到这里不要被迷惑。
             return new int[]{1, 1 + left[1] + right[1], Math.max(root.val, right[2]), Math.min(root.val, left[3])};
         }
 

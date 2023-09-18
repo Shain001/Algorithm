@@ -22,4 +22,20 @@ public class BalancedBinaryTree_L110 {
 
         return Math.abs(left - right) > 1 ? -1 : 1 + Math.max(left, right);
     }
+
+    public boolean isBalanced_v2(TreeNode root) {
+        if(root == null) {
+            return true;
+        }
+
+        return Math.abs(heigh_v2(root.left)- heigh_v2(root.right)) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+    }
+
+    private int heigh_v2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        return 1 + Math.max(heigh_v2(root.left), heigh_v2(root.right));
+    }
 }

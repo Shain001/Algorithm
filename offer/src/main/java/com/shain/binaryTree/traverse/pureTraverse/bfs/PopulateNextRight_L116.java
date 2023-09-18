@@ -1,9 +1,16 @@
 package com.shain.binaryTree.traverse.pureTraverse.bfs;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class PopulateNextRight_L116 {
+    public static void main(String[] args) {
+        Queue<Integer> test = new LinkedList<>();
+        test.offer(null);
+        System.out.println(test.size());
+        System.out.println(test.poll());
+    }
     public TreeNodeWithPointer connect(TreeNodeWithPointer root) {
         //doPopulate_v1(root);
 
@@ -65,6 +72,20 @@ public class PopulateNextRight_L116 {
     // preOrder solution
     public void doPopulate_V3(TreeNodeWithPointer left, TreeNodeWithPointer right) {
         if (left == null && right == null) return;
+
+        // 加了 right.next = null; 会错
+        // 无需在意 每一层最右侧的节点的next指针， 因为 初始值就是null。
+        // 为什么加了right.next = null 会出错？
+        //       1
+        //   /     \
+        //  2       3
+        // / \     / \
+        //4   5   6   7
+        // 一句话， 主要原因在于 doPopulate_V3(left.right, right.left); 时， 3 的left 6 变成了 传进函数的 right， 然后其next被设置成null了， 但这是不应该发生的， 因为此时 6 的next本来已经指向7了
+        // 为什么一定已经指向 7 了？ 因为时preOrder， 6 与 7 在遍历到3 的时候被连接， 而3 一定在6 之前被遍历到。
+        // 如何解决？ 加一个 if != null 就解决了， 但是没必要。
+        //  if(right.next == null)
+        //            right.next = null;
 
         left.next = right;
 

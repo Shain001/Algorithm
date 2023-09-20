@@ -57,4 +57,51 @@ public class DepthOfNAryTree_L559 {
             return result;
         }
     }
+
+    // v2
+    private int result;
+
+    public int maxDepth(Node root) {
+        result = 0;
+        traverse(root, 1);
+        return result;
+    }
+
+    private void traverse(Node root, int depth) {
+        if (root == null) {
+            return;
+        }
+
+        if (root.children == null || root.children.size() == 0) {
+            result = Math.max(result, depth);
+        }
+
+        for (Node n : root.children) {
+            traverse(n, depth+1);
+        }
+    }
+
+    // v3
+    private int result_v3 = 0;
+
+    public int maxDepth_v3(Node root) {
+        if (root == null) {
+            return 0;
+        }
+
+        traverse(root.children, 1);
+        return result;
+    }
+
+    private void traverse(List<Node> children, int depth) {
+        if (children == null || children.size() == 0) {
+            result = Math.max(result, depth);
+            return;
+        }
+
+        for (Node c : children) {
+            traverse(c.children, depth+1);
+        }
+    }
 }
+

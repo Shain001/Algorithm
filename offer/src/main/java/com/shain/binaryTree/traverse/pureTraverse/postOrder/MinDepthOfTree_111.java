@@ -20,4 +20,28 @@ public class MinDepthOfTree_111 {
         }
         return 1 + Math.min(left, right);
     }
+
+    // 从上至下
+    private int result;
+    public int minDepth_v2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        result = Integer.MAX_VALUE;
+        traverse(root, 1);
+        return result;
+    }
+
+    private void traverse(TreeNode root, int depth) {
+        if (root == null) {
+            return;
+        }
+        if (root.left == null && root.right == null) {
+            result = Math.min(depth, result);
+            return;
+        }
+
+        traverse(root.left, depth+1);
+        traverse(root.right, depth+1);
+    }
 }

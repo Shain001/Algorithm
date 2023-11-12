@@ -40,4 +40,37 @@ public class LCA2_1644 {
 
         return containsNode(root.right, target) || containsNode(root.left, target);
     }
+
+    // update 2023/10/1: v2, lab's version, easier to understand
+    private boolean foundP;
+    private boolean foundQ;
+    public TreeNode lowestCommonAncestor_v2(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode result = doSearch(root, p, q);
+        return foundP && foundQ? result: null;
+    }
+
+    private TreeNode doSearch(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+
+        TreeNode left = doSearch(root.left, p, q);
+        TreeNode right = doSearch(root.right, p, q);
+
+        if (root.val == p.val) {
+            foundP = true;
+            return root;
+        }
+
+        if (root.val == q.val) {
+            foundQ = true;
+            return root;
+        }
+
+        if (left != null && right != null) {
+            return root;
+        }
+
+        return right != null? right: left;
+    }
 }

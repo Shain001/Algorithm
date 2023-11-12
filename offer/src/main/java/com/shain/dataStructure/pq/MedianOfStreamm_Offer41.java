@@ -5,12 +5,10 @@ import java.util.PriorityQueue;
 class MedianOfStreamm_Offer41 {
     private PriorityQueue<Integer> low;
     private PriorityQueue<Integer> high;
-    private boolean isEven;
 
     public MedianOfStreamm_Offer41() {
         this.low = new PriorityQueue<Integer>((o1, o2) -> o2 - o1);
         this.high = new PriorityQueue<Integer>();
-        this.isEven = false;
     }
 
     /**
@@ -29,20 +27,32 @@ class MedianOfStreamm_Offer41 {
      * @param num
      */
     public void addNum(int num) {
-        // 不相等 -> 一定是 high < low -> 插入high中。
-        if (low.size() != high.size()) {
-            // 想插入high， 先利用low进行排序
-            low.add(num);
-            // 此时 low.size = high.size + 2, 从low中得到最大的， 加入high中， 两者长度相等，且 all values in low <= high
-            high.add(low.poll());
-        } else {
+        // 1. 如果 low = high
+        // 要加入 low
+        // low < high
+        // 要加入low
+        // low > high
+        // 要加入high
+
+        // e.g. 加入1 -> 到 low -> 加入 0， 如果只按照上面的逻辑， 0会被加入到high中， 但是不对， 因为0 < 1, 0 应该在 low 中
+        // 所以， 在加入 high 之前， 应该先用 low （大顶堆） 来排序
+        // 同理， 要加入low的话， 也应该现在high里面排个序
+
+
+        if (low.size() <= high.size()) {
             high.add(num);
             low.add(high.poll());
+        } else {
+            low.add(num);
+            high.add(low.poll());
         }
-        isEven = !isEven;
     }
 
     public double findMedian() {
-        return isEven ? low.peek() : 0.5 * (low.peek() + high.peek());
+        if (low.size() > high.size()) {
+            return (double) low.peek();
+        } else {
+            return (double) (low.peek() + high.peek())/2;
+        }
     }
 }

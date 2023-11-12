@@ -4,45 +4,34 @@ import java.util.Stack;
 
 class MinStack_Offer30 {
 
-    Stack<Integer> minStack;
-    Stack<Integer> stack;
-
-    /**
-     * initialize your data structure here.
-     */
+    private Stack<Integer> stack;
+    private Stack<Integer> min;
+    /** initialize your data structure here. */
     public MinStack_Offer30() {
         stack = new Stack<>();
-        minStack = new Stack<>();
+        min = new Stack<>();
     }
 
     public void push(int x) {
-        stack.push(x);
-        if (!minStack.isEmpty() && x < minStack.peek())
-            minStack.push(x);
-        else if (!minStack.isEmpty() && x >= minStack.peek())
-            minStack.push(minStack.peek());
-        else {
-            minStack.push(x);
+        if (min.size() == 0 || min.peek() >= x) {
+            min.push(x);
         }
-
+        stack.push(x);
     }
 
     public void pop() {
-        if (stack.isEmpty())
-            return;
-        stack.pop();
-        minStack.pop();
+        // 不要省略 topVal 这一部， 即不要直接写成 if(stack.pop == peek())， 会出错， 不知道为啥
+        int topVal = stack.pop();
+        if (topVal == min.peek()) {
+            min.pop();
+        }
     }
 
     public int top() {
-        if (stack.isEmpty())
-            return -1;
         return stack.peek();
     }
 
-    public int min() {
-        if (stack.isEmpty())
-            return -1;
-        return minStack.peek();
+    public int getMin() {
+        return min.peek();
     }
 }

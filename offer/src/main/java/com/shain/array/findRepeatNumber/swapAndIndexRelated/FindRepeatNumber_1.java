@@ -1,4 +1,4 @@
-package com.shain.array.swap;
+package com.shain.array.findRepeatNumber.swapAndIndexRelated;
 
 /**
  * elements from 0 to n-1
@@ -20,7 +20,6 @@ public class FindRepeatNumber_1 {
     public static int findRepeatReview(int[] nums) {
 
         for (int i = 0; i < nums.length; i++) {
-
             while (nums[i] != i) {
                 if (nums[i] == nums[nums[i]])
                     return nums[i];

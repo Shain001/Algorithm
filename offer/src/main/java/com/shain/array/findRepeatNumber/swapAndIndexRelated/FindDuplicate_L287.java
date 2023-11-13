@@ -1,4 +1,4 @@
-package com.shain.array.limitedComplexity;
+package com.shain.array.findRepeatNumber.swapAndIndexRelated;
 
 /**
  * 给定一个包含 n + 1 个整数的数组 nums ，其数字都在 [1, n] 范围内（包括 1 和 n），可知至少存在一个重复的整数。
@@ -9,15 +9,21 @@ package com.shain.array.limitedComplexity;
  * <p>
  * method1:
  * 二分。 由于数组长度为 n+1，但是 数字范围为 1-n， 所以必定至少有一个元素重复。
- * 又因为 元素取之范围 与 下标范围可对应， 并且 "数组中的元素虽然无序， 但是数组的下标是有序的"， 所以可以找通过下标寻找答案。
+ *
+ * 那么，既然知道了 元素取值范围 为 1 - n， 那么正常情况下 我们遍历 1-n， 看看数组中 哪个数字是重复的即可得到答案。
+ * 即， 利用暴力解法就可以得到答案。
+ * 所谓二分方法， 仅仅是对暴力解法的一种优化而已。 即 instead of 遍历 1-n 中所有取值， 我们利用二分来遍历。
+ * 即 二分的是 元素的取值， ！与下标无关
+ * 进而， 当 mid = 2 时。 数组中 <=2 的元素应该只有2 个， 即 1&2， 而如果 遍历数组以后， 发现 <=2 的元素 大于2个。 那么 1与2 中则必定有一个
+ * 重复的， 进而我们知道 新的搜索区间应该是  left - mid.
+ *
  * <p>
  * method2：
  * 转换为 找环形链表环的入口。
- *
- *
+ * <p>
+ * <p>
  * 如何证明 满足这种条件的 数组一定有环？
  * 我们对 nums 数组建图，每个位置 i 连一条 i→nums[i]的边。由于存在的重复的数字 target，因此 target 这个位置一定有起码两条指向它的边，因此整张图一定存在环。
- *
  */
 public class FindDuplicate_L287 {
     public static void main(String[] args) {
@@ -25,34 +31,43 @@ public class FindDuplicate_L287 {
         System.out.println(test.method2(new int[]{3, 3, 3, 2, 2}));
     }
 
+    private int[] nums;
+
     public int findDuplicate(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
+        this.nums = nums;
+        // 注意， left 和 right， 是 元素的取值范围
+        // 对于一个长度为n的数组。 由于其 元素取值范围是 【1，n-1】， 所以这样定义 left与right的初始值
+        // 即重点在于理解， 我们二分的是 元素的值， 与数组下标无关！
+        // 或者说， 二分仅仅是对于暴力循环解法的优化。 暴力解时， 我们一次循环 元素 1,2,3,....
+        // 但是利用二分， 我们可以提高时间复杂度。
+        // 其能够实现的原因在于： 如果 left - mid 这个范围中没有重复数字， 那么 "整个数组中" 小于等于 mid 的元素个数一定是 "不大于" mid 的
+        // 注意这里一定是不大于， 而不是等于， 即 一定是 if(count>mid) right=mid; 因为 有 [2,2,2,2,2] 这种情况。
+        int left = 1;
+        int right = nums.length-1;
 
         while (left < right) {
-            int mid = left + (right - left) / 2;
-            int countMid = doCount(nums, mid);
+            int mid = left + (right-left) / 2;
+            int count = doCount(mid);
 
-            // 假设 mid=4， 那么在数组中， 小于等于4的值在没有重复的情况下应该是4个。
-            // 那么假设这个count大于了4个， 说明 在 1-4 这个范围内必定有重复的数字， 所以我们需要在 1-4 的范围查找， 也即找左边的区间。
-            if (countMid > mid) {
+            if (count > mid) {
                 right = mid;
-            } else
-                left = mid + 1;
-
+            } else {
+                left = mid+1;
+            }
         }
+
         return left;
     }
 
-    private int doCount(int[] nums, int mid) {
+    private int doCount(int n) {
         int count = 0;
-
-        for (int i = 0; i <= nums.length - 1; i++) {
-            count = nums[i] <= mid ? count + 1 : count;
+        for (int num : nums) {
+            count = num <= n ? count + 1 : count;
         }
 
         return count;
     }
+
 
     /**
      * 将 元素值看作指针， 指向下一个节点的下标。

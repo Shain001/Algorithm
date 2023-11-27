@@ -3,6 +3,14 @@ package com.shain.array.pointers.twoPointer.binarySearch;
 /*
     输入: nums = [1,3,5,6], target = 2
     输出: 1
+
+    update 2023/11/26:
+    这题 之所以需要加 =， 并且在while中直接返回， 并且可以直接return left， 因为:
+    1. target 有可能在数组中。 所以可以直接return， 应为可以直接return了， 那么自然就要left=right为循环条件， 否则while中会漏判。
+    2. 也是因为target有可能在数组中， 所以你不能想着 不在while中return， 因为就这题而言， 当target在数组中时， return的是target的index。
+       若不在的话， return的应该是 出循环时 left指针指向的index+1， see？ 两者return的不一样
+    3. 进而在while循环条件中 加了 = 以后， 恰好出while循环以后 left与right指针错开一位， left正好指向+1的位置， 所以直接return left即可。
+
  */
 public class SearchInsert_L35 {
     public static void main(String[] args) {

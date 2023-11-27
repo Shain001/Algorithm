@@ -1,7 +1,7 @@
 1. right 永远初始化为 num.len -1
 2. 只要不是像 搜索右侧边界那样 需要使得 left=mid 的情况， mid 就等于 left + (right - left)/2, 目前只有一种情况需要
    mid=left + (right - left + 1) / 2,
-   就是 搜索有边界。
+   就是 搜索右边界。
 3. while 中 加不加 = ， 取决与 是否在循环中 直接 return。 如果循环中需要return， 则加=， 例如最基础的 二分搜索。
 
    加不加=，决定了退出循环的时候 left 是否 等于 right。 如果 while (left < right), 则出循环时必定有 left =
@@ -59,3 +59,11 @@
         }
 
         return left;
+
+对于死循环：
+死循环会出现， 只有一个根本原因： 即区间 在某一种情况下不在缩小了， 也即 left 和right 无法继续逼近了。
+一般来说会出现这种情况有两个可能性：
+1。 代码中有 left=mid， 此时要注意 mid = left + (right-left+1)/ 2 =》 这种写法有时可能溢出， 也会造成死循环， 可改成 mid = left + (right-left)/2 +1
+2. right， left 没有正确更新， 通常出现于 left = mid; right = mid. 即在if else 语块中 left和right都写的是 = mid, 没有+1/-1。
+此时， 只需要确定。 当mid < target / > target 时， mid的值是不是 "绝对不可能是答案了， 如果绝对不可能是的话， 那么就把当前mid 从下一个区间排除就可以了， 也即 对应着 +1/-1 操作"
+3. 

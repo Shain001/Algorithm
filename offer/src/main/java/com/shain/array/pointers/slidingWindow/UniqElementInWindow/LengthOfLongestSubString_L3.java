@@ -1,7 +1,9 @@
 package com.shain.array.pointers.slidingWindow.UniqElementInWindow;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class LengthOfLongestSubString_L3 {
     public static void main(String[] args) {
@@ -44,6 +46,32 @@ public class LengthOfLongestSubString_L3 {
             }
         }
         return result;
+    }
+
+    public int lengthOfLongestSubstring_v2(String s) {
+        if(s.length() == 1) {
+            return 1;
+        }
+        Set<Character> occured = new HashSet<>();
+        int maxLen = 0;
+
+        int left = 0;
+        int right = 0;
+
+        while (right < s.length()) {
+            char curRight = s.charAt(right);
+            right++;
+
+            while (occured.contains(curRight)) {
+                char curLeft = s.charAt(left++);
+                occured.remove(curLeft);
+            }
+
+            occured.add(curRight);
+            maxLen = Math.max(maxLen, right-left);
+        }
+
+        return maxLen;
     }
 
 }

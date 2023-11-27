@@ -35,6 +35,11 @@ public class FinkKthInTwoArrary_L4 {
         // 为什么可以这样？ 首先， 假设 list1 的剩余长度已经不够 k/2 了， 这代表 目标数一定在list2 中， 并且这个target一定在 当前start的更后方
         // which means, 就算list2 被抛弃的元素 比 list1 中剩余元素小 （即正常不应该扔它们），也不会影响正确答案。
         // 这样操作以后， 再经过n次迭代以后， 由于 k的值不断在减小， 所以最终一定会有一个 <= list1 剩余长度的k值出现， 然后可以正常进行比较进行判断。
+        // 补充：
+        // 使用 Integer.MAX_VALUE：当一个数组的剩余长度小于 k/2 时，将该数组的对应位置值设为 Integer.MAX_VALUE。这实际上是在说：“在这次比较中，不考虑这个数组的元素”，因为任何真实的元素值都不可能比 Integer.MAX_VALUE 大。
+        // 即， 如果 list 1 剩余长度不够， 那么直接抛弃list2 的前k/2 个元素。 最终由于递归的作用。 会比较list1 剩余元素和 list2 中的元素。
+        // 那么为什么可以直接抛弃list2 的元素， 且不会影响正确答案？ 很简单。 list1,list2 均取前 k/2 个元素， list1 中 长度不够 k/2， 这代表 -> 第k大的元素一定是在 list2中 k/2 这个index之后 （或者在list1 剩余元素中）， 即
+        // list2中前k/2 个元素不可能是答案。
         int val1 = (start1 + k / 2 - 1 < nums1.length) ? nums1[start1 + k / 2 - 1] : Integer.MAX_VALUE;
         int val2 = (start2 + k / 2 - 1 < nums2.length) ? nums2[start2 + k / 2 - 1] : Integer.MAX_VALUE;
 

@@ -1,4 +1,4 @@
-package com.shain.array.Rabin_Karp;
+package com.shain.array.pointers.slidingWindow.fixedWindowLength.Rabin_Karp;
 
 import java.util.ArrayList;
 import java.util.HashMap;

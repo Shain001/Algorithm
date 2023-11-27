@@ -11,8 +11,6 @@ public class FindAnagramsInString_L438 {
         var test = new FindAnagramsInString_L438();
         String s = "cbaebabacd";
         String p = "abc";
-        List<Integer> result = test.findAnagrams_v2(s, p);
-        System.out.println(result);
     }
 
     // 利用数组+滑动窗口 + 双指针
@@ -20,6 +18,7 @@ public class FindAnagramsInString_L438 {
     // 还有 方法是 只用 滑动窗口 + 两个数组 -> 不太好， 略
     // 自己想了一个方法是 滑动窗口+ Hash 字符串 -> 无需额外空间， 但是 虽然也是 On 级别时间复杂度， 但是会慢一点， 略了， 可看lt提交记录
     // 这个hash方法问题是会有hash冲突。 e.g. 3+5 = 8, 2+6 也等于8， 所以需要在冲突时再遍历一次 窗口中的字符进行检查
+    // 这种方法只适用于 这道题这种情况。 即窗口中 的字符串与p长度， 元素都相等。
     public List<Integer> findAnagrams_v2(String s, String p) {
         int m = s.length();
         int n = p.length();

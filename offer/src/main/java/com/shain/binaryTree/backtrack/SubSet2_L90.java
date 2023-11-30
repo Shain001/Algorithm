@@ -6,32 +6,32 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SubSet2_L90 {
-    private List<List<Integer>> result;
     private LinkedList<Integer> path;
+    private List<List<Integer>> result;
     private int[] nums;
+
     public List<List<Integer>> subsetsWithDup(int[] nums) {
-        this.result = new ArrayList<>();
-        this.path = new LinkedList<>();
         this.nums = nums;
-        Arrays.sort(nums);
-        backTrack(new boolean[nums.length], 0);
+        Arrays.sort(this.nums);
+        this.path = new LinkedList<>();
+        this.result = new ArrayList<>();
+
+        backTrack(0);
+
         return result;
     }
 
-    public void backTrack(boolean[] used, int start) {
+    private void backTrack(int start) {
         result.add(new ArrayList<>(path));
 
-
         for (int i = start; i < nums.length; i++) {
-            if (i > 0 && nums[i-1] == nums[i] && !used[i-1]) {
+            if (i > start && nums[i] == nums[i-1]) {
                 continue;
             }
-            path.add(nums[i]);
-            used[i] = true;
-            backTrack(used, i+1);
-            path.removeLast();
-            used[i] = false;
-        }
 
+            path.add(nums[i]);
+            backTrack(i+1);
+            path.removeLast();
+        }
     }
 }

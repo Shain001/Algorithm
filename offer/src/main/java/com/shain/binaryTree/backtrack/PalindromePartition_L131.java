@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PalindromePartition_L131 {
-    private final List<List<String>> result = new ArrayList<>();
+    private List<List<String>> result = new ArrayList<>();
     private boolean[][] dp;
     private String s;
 
@@ -78,4 +78,54 @@ public class PalindromePartition_L131 {
 //        }
 //        return true;
 //    }
+
+    // review 28/11/2023
+    private LinkedList<String> path;
+
+    public List<List<String>> partition_review(String s) {
+        this.result = new ArrayList<>();
+        this.path = new LinkedList<>();
+        this.dp = new boolean[s.length()][s.length()];
+        this.s = s;
+
+        backTrack(0);
+        return result;
+    }
+
+    private void backTrack(int start) {
+        if (start == s.length()) {
+            result.add(new ArrayList<>(path));
+        }
+
+        for (int len = 1; start + len < s.length()+1; len++) {
+            // end 为开区间， 方便substring
+            int end = start + len;
+
+            if (!isPalindrom(start, end-1)) {
+                continue;
+            }
+
+            String cur = s.substring(start, end);
+
+            path.add(cur);
+            backTrack(end);
+            path.removeLast();
+        }
+    }
+
+    // 闭区间
+    private boolean isPalindrom(int start, int end) {
+        if (start == end) {
+            dp[start][end] = true;
+            return true;
+        }
+
+        if (end - start == 1) {
+            dp[start][end] = s.charAt(start) == s.charAt(end);
+            return dp[start][end];
+        }
+
+        dp[start][end] = dp[start+1][end-1] && s.charAt(start) == s.charAt(end);
+        return dp[start][end];
+    }
 }

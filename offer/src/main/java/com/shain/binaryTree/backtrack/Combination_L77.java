@@ -18,7 +18,7 @@ public class Combination_L77 {
 
     public void backTrack(LinkedList<Integer> path, int start) {
         if (path.size() == k) {
-            result.add(new ArrayList(path));
+            result.add(new ArrayList<>(path));
             return;
         }
 

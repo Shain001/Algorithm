@@ -17,8 +17,7 @@ public class SerializeAndDeserialize_L297 {
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
         String[] split = data.split(",");
-        LinkedList<String> nodes = new LinkedList<>();
-        nodes.addAll(Arrays.asList(split));
+        LinkedList<String> nodes = new LinkedList<>(Arrays.asList(split));
         return doSerialize(nodes);
     }
 

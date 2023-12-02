@@ -1,4 +1,4 @@
-package com.shain.binaryTree.bst;
+package com.shain.binaryTree.serilization;
 
 import com.shain.common.tree.TreeNode;
 

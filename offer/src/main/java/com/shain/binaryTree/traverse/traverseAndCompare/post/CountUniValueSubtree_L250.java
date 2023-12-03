@@ -59,10 +59,10 @@ public class CountUniValueSubtree_L250 {
         if (root.left == null && root.right == null) {
             return new int[]{1, 1};
         }
-        if (root.left == null && root.right != null) {
+        if (root.left == null) {
             return root.right.val == root.val ? new int[]{1+right[0], 1} : new int[]{right[0],0};
         }
-        if (root.right == null && root.left != null) {
+        if (root.right == null) {
             return root.left.val == root.val? new int[]{1+left[0], 1}: new int[]{left[0], 0};
         }
         if (root.val == root.right.val && root.val == root.left.val) {

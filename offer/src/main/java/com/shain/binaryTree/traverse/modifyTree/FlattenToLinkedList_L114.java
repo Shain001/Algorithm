@@ -7,26 +7,22 @@ public class FlattenToLinkedList_L114 {
         doFlatten(root);
     }
 
-    // You can't simply do pre traverse
-    // This version lost all the right children's values
-    private void wrongVersion(TreeNode root) {
-        if (root == null)
-            return;
+    TreeNode parent;
 
-        TreeNode tempRight = root.right;
-        TreeNode tempLeft = root.left;
-        root.right = root.left;
+    public void flatten_preOrderTraverse(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        TreeNode originalLeft = root.left;
+        TreeNode originalRight = root.right;
         root.left = null;
-        wrongVersion(tempLeft);
-        wrongVersion(tempRight);
+        if (parent != null) parent.right = root;
+        parent = root;
+        flatten(originalLeft);
+        flatten(originalRight);
     }
 
-    // This is the right version that corrects the mistake made above.
-    // Firstly, since the above code lost all the right children's value, so what we need to do
-    // is to add the right children's value.
-    // Then, to do that, we have to ensure that the connected originalRight tree is already flatten.
-    // This is why the recursive step has to be moved above, which means this becomes
-    // you modify the tree from the bottom to top, instead of while traversing to the bottom.
     private void doFlatten(TreeNode root) {
         if (root == null)
             return;
@@ -43,5 +39,26 @@ public class FlattenToLinkedList_L114 {
         }
 
         root.right = originalRight;
+    }
+
+    private TreeNode doFlatten_v2(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        TreeNode left = doFlatten_v2(root.left);
+        TreeNode right = doFlatten_v2(root.right);
+
+        root.left = null;
+        root.right = left;
+
+        TreeNode dumpRoot = root;
+        while (root.right != null) {
+            root = root.right;
+        }
+
+        root.right = right;
+
+        return dumpRoot;
     }
 }

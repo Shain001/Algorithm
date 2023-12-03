@@ -11,14 +11,11 @@ public class MinDepthOfTree_111 {
         int left = minDepth(root.left);
         int right = minDepth(root.right);
 
-        // 左子树或者又子树为空的情况下， 不能记录当前最小深度就是1.
-        if (left == 0) {
-            return 1 + right;
-        }
-        if (right == 0) {
-            return 1 + left;
-        }
-        return 1 + Math.min(left, right);
+        // 保证是叶子节点。 若只有 一个子树为空， 不是答案
+        if (left != 0 && right != 0)
+            return Math.min(left,right)+1;
+
+        return left == 0? right+1: left+1;
     }
 
     // 从上至下

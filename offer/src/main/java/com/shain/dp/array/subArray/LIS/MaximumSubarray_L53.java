@@ -1,4 +1,4 @@
-package com.shain.dp.array.subArray;
+package com.shain.dp.array.subArray.LIS;
 
 /**
  * 这题也是跟 L300  一样， 注意dp数组的含义是 "以i 结尾的连续子数组的最大和， 而不是 0-i 之间的连续子数组最大和"。
@@ -98,4 +98,7 @@ public class MaximumSubarray_L53 {
 
         return result;
     }
+
+    // 分治方法
+    // https://leetcode.cn/problems/maximum-subarray/solutions/9058/dong-tai-gui-hua-fen-zhi-fa-python-dai-ma-java-dai/
 }

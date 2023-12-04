@@ -19,4 +19,22 @@ public class BestTimeStock2_L122 {
 
         return dp[dp.length - 1][0];
     }
+
+    // 贪心解法
+    // 根源如下：
+    //res =  (prices[3] - prices[2]) + (prices[2] - prices[1]) + (prices[1] - prices[0])
+    //    =  prices[3] - prices[0]
+    //仔细观察上面的式子，按照贪心算法，在下标为 1、2、3 的这三天，我们做的操作应该是买进昨天的，卖出今天的，虽然这种操作题目并不允许，但是它等价于：在下标为 0 的那一天买入，在下标为 3 的那一天卖出。
+    public int maxProfit_v2(int[] prices) {
+        int len = prices.length;
+        if (len < 2) {
+            return 0;
+        }
+
+        int res = 0;
+        for (int i = 1; i < len; i++) {
+            res += Math.max(prices[i] - prices[i - 1], 0);
+        }
+        return res;
+    }
 }

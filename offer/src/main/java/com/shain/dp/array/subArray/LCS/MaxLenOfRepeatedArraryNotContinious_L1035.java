@@ -1,4 +1,4 @@
-package com.shain.dp.array.subArray;
+package com.shain.dp.array.subArray.LCS;
 
 /**
  * 在两条独立的水平线上按给定的顺序写下 nums1 和 nums2 中的整数。

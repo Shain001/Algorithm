@@ -1,4 +1,4 @@
-package com.shain.dp.array.subArray;
+package com.shain.dp.array.subArray.LIS;
 
 public class LongestContinueIncreaseSubArrary_L674 {
     /**

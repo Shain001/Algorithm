@@ -1,4 +1,4 @@
-package com.shain.dp.array.subArray;
+package com.shain.dp.array.subArray.LIS;
 
 import java.util.Arrays;
 

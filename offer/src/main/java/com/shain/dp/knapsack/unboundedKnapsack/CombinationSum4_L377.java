@@ -1,5 +1,6 @@
 package com.shain.dp.knapsack.unboundedKnapsack;
 
+// 求排列数
 public class CombinationSum4_L377 {
     public int combinationSum4(int[] nums, int target) {
         int dp[] = new int[target + 1];

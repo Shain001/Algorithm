@@ -2,6 +2,7 @@ package com.shain.dp.knapsack.unboundedKnapsack;
 
 import java.util.Arrays;
 
+// 求最少个数
 public class CoinChange_L322 {
     public static void main(String[] args) {
         System.out.println(coinChange(new int[]{1, 2, 5}, 11));
@@ -42,5 +43,22 @@ public class CoinChange_L322 {
         }
 
         return dp[dp.length - 1][dp[0].length - 1] <= amount ? dp[dp.length - 1][dp[0].length - 1] : -1;
+    }
+
+    public int review(int[] coins, int amount) {
+        int[] dp = new int[amount+1];
+        dp[0] = 0;
+        for (int i = 1; i < amount+1; i++) {
+            dp[i] = amount+1;
+        }
+        for (int coin : coins) {
+            // 因为要的值是 dp[i][j-coins[i-1]]， i就是当前这一行的i， 所以这里j就是应该正序遍历。
+            for (int j = 0; j < amount + 1; j++) {
+                if (j >= coin)
+                    dp[j] = Math.min(dp[j - coin] + 1, dp[j]);
+            }
+        }
+
+        return dp[dp.length-1] == amount+1? -1: dp[dp.length-1];
     }
 }

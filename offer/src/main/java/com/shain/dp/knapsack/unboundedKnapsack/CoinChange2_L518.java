@@ -1,5 +1,6 @@
 package com.shain.dp.knapsack.unboundedKnapsack;
 
+//求组合数
 public class CoinChange2_L518 {
     public static void main(String[] args) {
         System.out.println(change(10, new int[]{5}));
@@ -48,5 +49,25 @@ public class CoinChange2_L518 {
         }
 
         return dp[dp.length - 1][dp[0].length - 1];
+    }
+
+    // 09/12/2023
+    public int change_review(int amount, int[] coins) {
+        int[] dp = new int[amount+1];
+        dp[0] = 1;
+        // 此处不需要加下面的初始化。 初始的dp相当于第0行， 什么硬币都不选。 则只有dp0 应该有值为1
+        // for (int i = 1; i < amount+1; i++) {
+        //   dp[i] = i % coins[0] == 0? 1: 0;
+        // }
+
+        for (int i = 0; i < coins.length; i++){
+            // 因为要的值是 dp[i][j-coins[i-1]]， i就是当前这一行的i， 所以这里j就是应该正序遍历。
+            for (int j = 0; j < amount+1; j++)  {
+                if (j >= coins[i])
+                    dp[j] = dp[j-coins[i]] + dp[j];
+            }
+        }
+
+        return dp[dp.length-1];
     }
 }

@@ -1,4 +1,4 @@
-package com.shain.dp.string.twoString;
+package com.shain.dp.array.subArray.LCS.twoString;
 
 public class EditDistance {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.shain.dp.string.twoString;
+package com.shain.dp.array.subArray.LCS.twoString;
 
 public class IsSubsequence_L392 {
     public boolean isSubsequence(String s, String t) {
@@ -18,5 +18,24 @@ public class IsSubsequence_L392 {
         }
 
         return dp[dp.length - 1][dp[0].length - 1] == s.length();
+    }
+
+    // 双指针贪心方法， 效率更高
+    public boolean v2(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+
+        int i = 0, j = 0;
+
+        while (i < m && j < n) {
+            if (s.charAt(i) == t.charAt(j)) {
+                i++;
+                j++;
+            } else {
+                j++;
+            }
+        }
+
+        return i == m;
     }
 }

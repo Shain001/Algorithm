@@ -1,4 +1,4 @@
-package com.shain.dp.string.twoString;
+package com.shain.dp.array.subArray.LCS.twoString;
 
 public class DistinctSubsequences_L115 {
     public int numDistinct(String s, String target) {

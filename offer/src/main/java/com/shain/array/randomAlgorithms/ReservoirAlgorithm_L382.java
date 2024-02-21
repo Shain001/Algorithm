@@ -24,7 +24,7 @@ import java.util.Random;
  *
  * 选取第i个元素的概率变为 m/i, 而不是 1/i.
  * 证明时， 每个元素被选取的概率都是 m/n, 而不是 1/n
- * todo： 推导证明过程。
+ * 证明过程在go中
  *
  *
  * import (

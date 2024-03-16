@@ -11,6 +11,48 @@ public class ReverseKGroup_L25 {
         System.out.println(reverseKGroup_review(head, 2));
     }
 
+    // update 2024 Mar
+    // 头插法
+    public ListNode reverseKGroup_update(ListNode head, int k) {
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        ListNode pre = dummy;
+        // k 个一组进行头插法法
+        // 一组结束以后， pre 指针 指向前一组的尾巴， 也即 前一组的cur。
+        // 每组进行之前需要检查 剩余节点长度。
+        while (checkLength(pre.next, k)) {
+            pre = reverseK(pre, pre.next, k);
+        }
+
+        return dummy.next;
+    }
+
+    private ListNode reverseK(ListNode pre, ListNode head, int k) {
+        // 注意这里是 k = 1, 不是 k = 0;
+        while (k > 1) {
+            ListNode next = head.next;
+            head.next = next.next;
+            next.next = pre.next;
+            pre.next = next;
+            k--;
+        }
+
+        return head;
+
+    }
+
+    private boolean checkLength(ListNode head, int k) {
+        while (k > 0) {
+            if (head == null) {
+                return false;
+            }
+
+            head = head.next;
+            k--;
+        }
+        return true;
+    }
+
     public static ListNode reverseKGroup(ListNode head, int k) {
         return doReverse(head, k);
     }

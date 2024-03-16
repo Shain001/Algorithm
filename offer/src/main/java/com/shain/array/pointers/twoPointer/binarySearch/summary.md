@@ -1,3 +1,11 @@
+补充：
+寻找峰值会用到 nums[mid] 与 nums[mid+1] 比较。
+搜寻旋转数组的最小值 会用到 nums[mid] 与 nums[right] 比较。 
+如果旋转数组中有重复元素， 同时要找最小值， 那么会用到 right-- 的操作。 L154
+
+如果是旋转数组， 但是搜寻的是target， 那么重点是 判断各种情况， mid在那个区间， target在哪个升序区间 L33
+ 
+
 1. right 永远初始化为 num.len -1
 2. 只要不是像 搜索右侧边界那样 需要使得 left=mid 的情况， mid 就等于 left + (right - left)/2, 目前只有一种情况需要
    mid=left + (right - left + 1) / 2,

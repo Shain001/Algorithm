@@ -21,6 +21,15 @@ package com.shain.array.pointers.twoPointer.binarySearch;
  *
  *  对于 general 情况的二分来讲。 我们要确定的就是：
  *  1。 开闭区间 -> 统一成 坐闭右闭区间 -> while 条件 写成 带 等于号。 -> 循环结束之后 R 在 L 的左边。
+ *
+ *
+ *  关于 while 条件中带不带等于号的问题。
+ *  如果 更新left， right指针的时候， 都是 mid-1/+1, 即不会有 某一种情况下 left， right指针不动的情况。 那么带等于号不会有死循环的问题， 但是要注意判断
+ *  循环结束以后left的值是否越界， 因为如果带了等于号， 出循环的时候 left， right是交错的。
+ *
+ *  如果 存在某种情况， left要等于mid或者right要等于mid， 则 while中带等于号的话可能出现死循环， 这时有两种选择， 要么直接不带等于号， 或者带着等于号， 但是while中要判断 nums[left]==nums[mid] 的情况。e.g. L153
+ *
+ *  总之， 就是要注意 right = mid 或者 left = mid 的情况。
  */
 public class ROOT_SearchFirstAndLast_L34 {
     public int[] seeMe(int[] nums, int target) {

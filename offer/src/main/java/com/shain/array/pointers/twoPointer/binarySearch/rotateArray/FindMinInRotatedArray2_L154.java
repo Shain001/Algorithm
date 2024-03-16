@@ -30,6 +30,10 @@ public class FindMinInRotatedArray2_L154 {
                 // 假设target在mid的左侧 -> right - 1 可以使mid向左移
                 // 假设target在mid的右侧 -> right -1 最终会使得right到达target位置 （e.g. line 27, right 最后会指向0）， 之后left会与right汇合出循环。
                 // 假设target即mid， [1,1,0,0,0] -> right -1 以后， 会进入到正常逻辑
+                // 补充： 很重要的一点
+                // 为什么 改成 left++ 不行？
+                // 因为 nums[mid]等于nums[right]，所以nums[right]不可能是最小值（除非它是唯一的元素，这种情况下循环将会结束），因此我们可以安全地排除right索引指向的元素，而不会错过最小值
+                // 但是因为没有判断 left， 所以left是有可能是最小值的。
             else if (nums[mid] == nums[right])
                 right--;
         }

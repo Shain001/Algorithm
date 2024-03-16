@@ -11,6 +11,70 @@ public class ReverseBetween_L92 {
     public static void main(String[] args) {
     }
 
+    // 遍历
+    public ListNode reverseBetween_updated2(ListNode head, int left, int right) {
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        ListNode p = head;
+        ListNode pre = dummy;
+
+        for (int i = 1; i < left; i++) {
+            if (p == null) {
+                return head;
+            }
+            pre = pre.next;
+            p = p.next;
+        }
+
+        pre.next = reverseN(p, right-left+1);
+        return dummy.next;
+    }
+
+    private ListNode reverseN(ListNode head, int n) {
+        if (head == null) {
+            return head;
+        }
+
+        ListNode pre = null;
+        ListNode p = head;
+        while (p != null && n > 0) {
+            ListNode temp = p.next;
+            p.next = pre;
+            pre = p;
+            p = temp;
+            n--;
+        }
+        head.next = p;
+        return pre;
+    }
+
+    // 头插法
+    public ListNode reverseBetween_updated1(ListNode head, int left, int right) {
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        // p 始终指向反转区间前一个节点，即不反转区间的最后一个节点， 保持不动。
+        ListNode start = dummy;
+        // q 始终指向 反转区间的第一个节点， 也即反转之后的新的尾节点， 保持不动。
+        ListNode tail = head;
+        int i = 0;
+        while (i < left-1) {
+            start = start.next;
+            tail = tail.next;
+            i++;
+        }
+
+        while (i < right-1) {
+            ListNode next = tail.next;
+            tail.next = next.next;
+            // 注意， next.next 不是等于tail
+            next.next = start.next;
+            start.next = next;
+            i++;
+        }
+
+        return dummy.next;
+    }
+
     public ListNode reverseBetween(ListNode head, int left, int right) {
         return doReverse(head, left, right);
     }

@@ -18,6 +18,7 @@ public class Trie {
         }
 
         var node = cur.getChild(word.charAt(0));
+
         if (node == null) {
             var child = cur.addChild(word.charAt(0));
             doInsert(child, word.substring(1));
@@ -39,11 +40,7 @@ public class Trie {
         }
 
         var child = head.getChild(word.charAt(0));
-        if (child != null) {
-            return doSearch(child, word.substring(1));
-        } else {
-            return null;
-        }
+        return child == null? null: doSearch(child, word.substring(1));
     }
 
     public boolean startsWith(String prefix) {

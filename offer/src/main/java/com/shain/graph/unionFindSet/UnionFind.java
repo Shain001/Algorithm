@@ -7,6 +7,14 @@ import java.util.stream.IntStream;
  *
  * 只写了按rank合并 以及 带 路经压缩的 find。
  * 还有按高度合并， 以及不带 路经压缩的 find， 若需要可看上面文章
+ *
+ * 合并分为：
+ * 1. 按树的size， 即节点数量合并 -> size小的合并到size大的树上。
+ * 2. 按树的rank合并， rank小的合并到rank大的上
+ *
+ * 路径压缩又分为：
+ * 1. 隔代压缩 -> cur 的parent 更新为 parent.parent
+ * 2. 完全压缩 -> 所有节点都直接连接到 root
  */
 public class UnionFind {
         // parent数组的下标与元素值一一对应。 其意义为存储 value=i 的节点i 的根结点的值， 也即下标。
@@ -14,13 +22,13 @@ public class UnionFind {
         // 在union过程中， 树的数量因为合并不断减少。 
         // 也即， 只有当 parent[i] == i 时，代表当前的i就是某棵树的根结点。
         // 如果 parent[i] = j, 则当前i的根结点值（也即下标）为j， 最终能够追踪到根结点。
-        private int[] parent;
+        private final int[] parent;
         // 合并的次数
         // 或者 树的个数， 两者可以按需求变换。
         // 如果是合并的次数， 则初始化为0， 合并时++
         // 如果是 树的个数， 则初始化为数组长度， 合并时--
         private int count;
-        private int[] rank;
+        private final int[] rank;
 
         // n -> number of nodes
         public UnionFind(int n) {
@@ -54,7 +62,7 @@ public class UnionFind {
             count++;
         }
 
-        private int find(int x) {
+        int find(int x) {
             if (parent[x] != x) {
                 parent[x] = find(parent[x]);
             }

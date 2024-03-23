@@ -54,4 +54,22 @@ public class InsertIntoBst_L701 {
         return dumpHead;
 
     }
+
+    public TreeNode insertIntoBST_rec(TreeNode root, int val) {
+        if (root == null) {
+            return new TreeNode(val);
+        }
+
+        if (root.val > val) {
+            root.left = insertIntoBST(root.left, val);
+            return root;
+        }
+
+        if (root.val < val) {
+            root.right = insertIntoBST(root.right, val);
+            return root;
+        }
+
+        return root;
+    }
 }

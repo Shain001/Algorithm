@@ -1,8 +1,5 @@
 package com.design.Trie;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class TrieNode {
     protected char val;
     // 可以直接用数组， 因为是单词， 就26个字母最多
@@ -22,16 +19,16 @@ public class TrieNode {
     }
 
     protected TrieNode getChild(char val) {
-        return children[val-'a'];
+        return children[val - 'a'];
     }
 
     protected TrieNode addChild(char val) {
-        if (children[val-'a'] != null) {
-            return children[val-'a'];
+        if (children[val - 'a'] != null) {
+            return children[val - 'a'];
         }
 
         var child = new TrieNode(val);
-        this.children[val-'a'] = child;
+        this.children[val - 'a'] = child;
         return child;
     }
 

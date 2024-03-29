@@ -51,37 +51,6 @@ public class User {
         return ans;
     }
 
-    // 尝试使用 迭代器 模拟 合并 k 个有序链表， 不行
-    // 因为 迭代器在 pq比较过程中被推进了。
-    // 如果想要继续这种方法， 应该要自建一个 Node 类， 把 posts 存成链表的形式。
-//    protected List<Integer> getNews_pullV2(int n) {
-//        PriorityQueue<Iterator<Tweet>> pq = new PriorityQueue<>((t1, t2) -> t2.next().postedAt.compareTo(t1.next().postedAt));
-//        List<Integer> ans = new ArrayList<>();
-//
-//        addToPq_V2(this, pq);
-//        for (User follow: follows) {
-//            addToPq_V2(follow, pq);
-//        }
-//
-//        while (n > 0 && !pq.isEmpty()) {
-//            Iterator<Tweet> cur = pq.poll();
-//
-//            ans.add(cur.next().id);
-//
-//            if (cur.hasNext()) {
-//                pq.add(cur);
-//            }
-//        }
-//
-//        return ans;
-//    }
-//
-//    private void addToPq_V2(User user, PriorityQueue<Iterator<Tweet>> pq) {
-//        if (!user.posts.isEmpty()) {
-//            pq.add(user.posts.iterator());
-//        }
-//    }
-
     private void addToPq(PriorityQueue<Tweet> pq, User u, int n) {
         Iterator<Tweet> iterator = posts.iterator();
         while (n > 0 && iterator.hasNext()) {

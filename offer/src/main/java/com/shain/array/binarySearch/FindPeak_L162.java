@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch;
+package com.shain.array.binarySearch;
 
 public class FindPeak_L162 {
     // 整体相当于通过二分找最大值

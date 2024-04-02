@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch;
+package com.shain.array.binarySearch;
 
 /**
  *  !UPDATE:

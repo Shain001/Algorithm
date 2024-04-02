@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch;
+package com.shain.array.binarySearch;
 
 public class ValidSqure_L367 {
     public boolean isPerfectSquare(int num) {

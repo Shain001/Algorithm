@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch.rotateArray;
+package com.shain.array.binarySearch.rotateArray;
 
 /**
  * 这题其中一个点是。 原本数组是有序的， 这代表着 nums[mid] 是不可能大于nums[right] 的。

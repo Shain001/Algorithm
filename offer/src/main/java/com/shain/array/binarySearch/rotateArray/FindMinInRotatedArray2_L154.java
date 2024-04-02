@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch.rotateArray;
+package com.shain.array.binarySearch.rotateArray;
 
 public class FindMinInRotatedArray2_L154 {
     public static void main(String[] args) {

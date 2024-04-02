@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch;
+package com.shain.array.binarySearch;
 
 /*
     输入: nums = [1,3,5,6], target = 2

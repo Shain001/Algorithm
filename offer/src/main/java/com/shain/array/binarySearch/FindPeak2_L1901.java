@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch;
+package com.shain.array.binarySearch;
 
 /**
  * 证明更重要， 看题解：

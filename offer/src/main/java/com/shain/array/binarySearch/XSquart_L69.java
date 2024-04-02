@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch;
+package com.shain.array.binarySearch;
 
 /**
  * 这题两个关键， 1。 对于溢出的处理。

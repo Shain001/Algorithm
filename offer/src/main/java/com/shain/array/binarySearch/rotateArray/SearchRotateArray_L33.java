@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch.rotateArray;
+package com.shain.array.binarySearch.rotateArray;
 
 /**
  * 难点在于分析， 一定要画图， 分析所有情况。

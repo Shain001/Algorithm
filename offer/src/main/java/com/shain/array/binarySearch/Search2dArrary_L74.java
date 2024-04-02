@@ -1,4 +1,4 @@
-package com.shain.array.pointers.twoPointer.binarySearch;
+package com.shain.array.binarySearch;
 
 public class Search2dArrary_L74 {
     public boolean searchMatrix(int[][] matrix, int target) {

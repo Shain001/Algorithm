@@ -41,7 +41,6 @@ public class MinimumHeightTree_L310 {
                 }
                 size--;
             }
-
         }
 
         List<Integer> ans = new ArrayList<>();

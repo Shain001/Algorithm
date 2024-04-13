@@ -1,4 +1,4 @@
-package com.shain.sort;
+package com.shain.sort.mergeSort;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package com.shain;
+package com.shain.binaryTree.bst;
 
 public class ValidateBst_LCR152 {
     private int[] postorder;

@@ -1,6 +1,6 @@
 package com.shain.dp.array.subArray.LCS.twoString;
 
-public class EditDistance {
+public class EditDistance_L72 {
     public static void main(String[] args) {
         System.out.println(minDistance("ros", "horse"));
     }
@@ -68,5 +68,44 @@ public class EditDistance {
         }
 
         return dp[dp.length - 1][dp[0].length - 1];
+    }
+
+    // 优化为 一维数组
+    public int minDistance_optimize(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+
+        int[] dp = new int[len2+1];
+
+        for (int i = 0; i < len2+1; i++) {
+            dp[i] = i;
+        }
+
+        for (int i = 1; i < len1+1; i++) {
+            int prev = dp[0]; // 保存左上角的值
+            dp[0] = i;
+
+            for (int j = 1; j < len2 + 1; j++) {
+                // 为了更新prev的值
+                int temp = dp[j];
+
+                if (word1.charAt(i-1) == word2.charAt(j-1)) {
+                    dp[j] = prev;
+                } else {
+                    // remove from 1
+                    int remove1 = 1 + dp[j];
+                    // remove from 2
+                    int remove2 = 1 + dp[j-1];
+                    // replace cur, so that current two char would equal, only need to ensure i-1, j-1 equals
+                    int replace = 1 + prev;
+
+                    dp[j] = Math.min(replace,Math.min(remove1, remove2));
+                }
+
+                prev = temp;
+            }
+        }
+
+        return dp[len2];
     }
 }

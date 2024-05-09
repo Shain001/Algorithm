@@ -40,26 +40,24 @@ public class OnCallSystem {
         throw new NoAvailableHandlerException();
     }
 
+    private boolean assignIncident(HandlerEmployee e, Incident incident) {
+        e.handleIncident(incident);
+        return incident.status == Incident.Status.PROCESSED;
+    }
+
     class NoAvailableHandlerException extends RuntimeException {
         public NoAvailableHandlerException() {
             super("No Available Handler");
         }
     }
 
-    private boolean assignIncident(IncidentHandler e, Incident incident) {
-        e.handleIncident(incident);
-        return incident.status == Incident.Status.PROCESSED;
-    }
-
     class Incident {
         enum Status {
-            PROCESSED,
-            PENDING,
-            IN_PROCESS
+            PROCESSED, PENDING, IN_PROCESS
         }
 
         private String incidentId;
-        private IncidentHandler handler;
+        private HandlerEmployee handler;
         private Status status;
 
         public Incident() {
@@ -67,7 +65,7 @@ public class OnCallSystem {
             this.incidentId = UUID.randomUUID().toString();
         }
 
-        private void setHandler(IncidentHandler handler) {
+        private void setHandler(HandlerEmployee handler) {
             this.handler = handler;
             this.status = Status.IN_PROCESS;
             System.out.printf("Incident %s is currently handled by %s, employeeId %s%n", incidentId, handler.position.toString(), handler.employeeId);
@@ -79,15 +77,13 @@ public class OnCallSystem {
         }
     }
 
-    interface handler {
+    interface IncidentHandler {
         void handleIncident(Incident incident);
     }
 
     abstract class Employee {
         enum Position {
-            WORKER,
-            LEAD,
-            BOSS
+            WORKER, LEAD, BOSS
         }
 
         protected String employeeId;
@@ -99,33 +95,33 @@ public class OnCallSystem {
         }
     }
 
-    abstract class IncidentHandler extends Employee implements handler {
+    abstract class HandlerEmployee extends Employee implements IncidentHandler {
 
         protected boolean isAvailable;
-        protected Deque<Incident> incidents;
+        protected Deque<Incident> handledIncidents;
         protected IncidentHandleStrategy strategy;
+
+        public HandlerEmployee(Position position, IncidentHandleStrategy strategy) {
+            super(position);
+            this.isAvailable = true;
+            this.handledIncidents = new LinkedList<>();
+            this.strategy = strategy;
+        }
 
         public final void handleIncident(Incident incident) {
             incident.setHandler(this);
-            this.incidents.offerLast(incident);
-            this.strategy.handle(incident, this);
-        }
-
-        public IncidentHandler(Position position, IncidentHandleStrategy strategy) {
-            super(position);
-            this.isAvailable = true;
-            this.incidents = new LinkedList<>();
-            this.strategy = strategy;
+            this.handledIncidents.offerLast(incident);
+            this.strategy.doHandleIncident(incident, this);
         }
     }
 
-    class Boss extends IncidentHandler {
+    class Boss extends HandlerEmployee {
         public Boss() {
             super(Position.BOSS, new BossIncidentHandleStrategy());
         }
     }
 
-    class Worker extends IncidentHandler {
+    class Worker extends HandlerEmployee {
         private final List<Lead> knownLeads;
 
         public Worker(List<Lead> leads) {
@@ -134,7 +130,7 @@ public class OnCallSystem {
         }
     }
 
-    class Lead extends IncidentHandler {
+    class Lead extends HandlerEmployee {
         private final List<Boss> knownBosses;
 
         public Lead(List<Boss> bosses) {
@@ -144,17 +140,17 @@ public class OnCallSystem {
     }
 
     interface IncidentHandleStrategy {
-        void handle(Incident incident, IncidentHandler handler);
+        void doHandleIncident(Incident incident, HandlerEmployee handler);
     }
 
     class WorkerIncidentHandleStrategy implements IncidentHandleStrategy {
 
         @Override
-        public void handle(Incident incident, IncidentHandler handler) {
+        public void doHandleIncident(Incident incident, HandlerEmployee handler) {
             if (Math.random() < 0.5) {
                 incident.closeIncident();
             } else {
-                handler.incidents.pollLast();
+                handler.handledIncidents.pollLast();
                 for (Lead lead : ((Worker) handler).knownLeads) {
                     if (lead.isAvailable) {
                         lead.handleIncident(incident);
@@ -168,7 +164,7 @@ public class OnCallSystem {
     class BossIncidentHandleStrategy implements IncidentHandleStrategy {
 
         @Override
-        public void handle(Incident incident, IncidentHandler handler) {
+        public void doHandleIncident(Incident incident, HandlerEmployee handler) {
             incident.closeIncident();
         }
     }
@@ -176,11 +172,11 @@ public class OnCallSystem {
     class LeadIncidentHandleStrategy implements IncidentHandleStrategy {
 
         @Override
-        public void handle(Incident incident, IncidentHandler handler) {
+        public void doHandleIncident(Incident incident, HandlerEmployee handler) {
             if (Math.random() < 0.6) {
                 incident.closeIncident();
             } else {
-                handler.incidents.pollLast();
+                handler.handledIncidents.pollLast();
                 for (Boss b : ((Lead) handler).knownBosses) {
                     if (b.isAvailable) {
                         b.handleIncident(incident);
@@ -190,7 +186,6 @@ public class OnCallSystem {
             }
         }
     }
-
 
     public static void main(String[] args) throws Exception {
         var onCallSystem = new OnCallSystem(1, 10, 4);

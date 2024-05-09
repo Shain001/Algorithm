@@ -17,7 +17,7 @@ public class OnCallSystem {
         this.incidents = new ArrayList<>();
     }
 
-    public boolean handleIncident() {
+    public boolean handleIncident() throws Exception {
         var incident = new Incident();
 
         for (Worker w : workers) {
@@ -37,8 +37,13 @@ public class OnCallSystem {
                 return assignIncident(b, incident);
             }
         }
+        throw new NoAvailableHandlerException();
+    }
 
-        return false;
+    class NoAvailableHandlerException extends RuntimeException {
+        public NoAvailableHandlerException() {
+            super("No Available Handler");
+        }
     }
 
     private boolean assignIncident(IncidentHandler e, Incident incident) {
@@ -174,7 +179,7 @@ public class OnCallSystem {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         var onCallSystem = new OnCallSystem(1, 10, 4);
         onCallSystem.handleIncident();
     }

@@ -99,35 +99,29 @@ public class OnCallSystem {
         }
     }
 
-    abstract class IncidentHandler extends Employee implements handler{
+    abstract class IncidentHandler extends Employee implements handler {
 
         protected boolean isAvailable;
         protected Deque<Incident> incidents;
-
+        protected IncidentHandleStrategy strategy;
 
         public final void handleIncident(Incident incident) {
             incident.setHandler(this);
             this.incidents.offerLast(incident);
-            doHandle(incident);
+            this.strategy.handle(incident, this);
         }
 
-        abstract protected void doHandle(Incident incident);
-
-        public IncidentHandler(Position position) {
+        public IncidentHandler(Position position, IncidentHandleStrategy strategy) {
             super(position);
             this.isAvailable = true;
             this.incidents = new LinkedList<>();
+            this.strategy = strategy;
         }
     }
 
     class Boss extends IncidentHandler {
         public Boss() {
-            super(Position.BOSS);
-        }
-
-        @Override
-        protected void doHandle(Incident incident) {
-            incident.closeIncident();
+            super(Position.BOSS, new BossIncidentHandleStrategy());
         }
     }
 
@@ -135,17 +129,33 @@ public class OnCallSystem {
         private final List<Lead> knownLeads;
 
         public Worker(List<Lead> leads) {
-            super(Position.WORKER);
+            super(Position.WORKER, new WorkerIncidentHandleStrategy());
             this.knownLeads = leads;
         }
+    }
+
+    class Lead extends IncidentHandler {
+        private final List<Boss> knownBosses;
+
+        public Lead(List<Boss> bosses) {
+            super(Position.LEAD, new LeadIncidentHandleStrategy());
+            this.knownBosses = bosses;
+        }
+    }
+
+    interface IncidentHandleStrategy {
+        void handle(Incident incident, IncidentHandler handler);
+    }
+
+    class WorkerIncidentHandleStrategy implements IncidentHandleStrategy {
 
         @Override
-        protected void doHandle(Incident incident) {
+        public void handle(Incident incident, IncidentHandler handler) {
             if (Math.random() < 0.5) {
                 incident.closeIncident();
             } else {
-                incidents.pollLast();
-                for (Lead lead: knownLeads) {
+                handler.incidents.pollLast();
+                for (Lead lead : ((Worker) handler).knownLeads) {
                     if (lead.isAvailable) {
                         lead.handleIncident(incident);
                         return;
@@ -155,20 +165,23 @@ public class OnCallSystem {
         }
     }
 
-    class Lead extends IncidentHandler {
-        private final List<Boss> knownBosses;
-        public Lead(List<Boss> bosses) {
-            super(Position.LEAD);
-            this.knownBosses = bosses;
-        }
+    class BossIncidentHandleStrategy implements IncidentHandleStrategy {
 
         @Override
-        protected void doHandle(Incident incident) {
+        public void handle(Incident incident, IncidentHandler handler) {
+            incident.closeIncident();
+        }
+    }
+
+    class LeadIncidentHandleStrategy implements IncidentHandleStrategy {
+
+        @Override
+        public void handle(Incident incident, IncidentHandler handler) {
             if (Math.random() < 0.6) {
                 incident.closeIncident();
             } else {
-                incidents.pollLast();
-                for (Boss b: knownBosses) {
+                handler.incidents.pollLast();
+                for (Boss b : ((Lead) handler).knownBosses) {
                     if (b.isAvailable) {
                         b.handleIncident(incident);
                         return;

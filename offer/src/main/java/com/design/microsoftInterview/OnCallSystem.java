@@ -41,7 +41,7 @@ public class OnCallSystem {
         return false;
     }
 
-    private boolean assignIncident(Employee e, Incident incident) {
+    private boolean assignIncident(IncidentHandler e, Incident incident) {
         e.handleIncident(incident);
         return incident.status == Incident.Status.PROCESSED;
     }
@@ -54,7 +54,7 @@ public class OnCallSystem {
         }
 
         private String incidentId;
-        private Employee handler;
+        private IncidentHandler handler;
         private Status status;
 
         public Incident() {
@@ -62,7 +62,7 @@ public class OnCallSystem {
             this.incidentId = UUID.randomUUID().toString();
         }
 
-        private void setHandler(Employee handler) {
+        private void setHandler(IncidentHandler handler) {
             this.handler = handler;
             this.status = Status.IN_PROCESS;
             System.out.printf("Incident %s is currently handled by %s, employeeId %s%n", incidentId, handler.position.toString(), handler.employeeId);
@@ -74,6 +74,10 @@ public class OnCallSystem {
         }
     }
 
+    interface handler {
+        void handleIncident(Incident incident);
+    }
+
     abstract class Employee {
         enum Position {
             WORKER,
@@ -82,11 +86,21 @@ public class OnCallSystem {
         }
 
         protected String employeeId;
-        protected boolean isAvailable;
-        protected Deque<Incident> incidents;
         protected Position position;
 
-        protected final void handleIncident(Incident incident) {
+        public Employee(Position position) {
+            this.employeeId = UUID.randomUUID().toString();
+            this.position = position;
+        }
+    }
+
+    abstract class IncidentHandler extends Employee implements handler{
+
+        protected boolean isAvailable;
+        protected Deque<Incident> incidents;
+
+
+        public final void handleIncident(Incident incident) {
             incident.setHandler(this);
             this.incidents.offerLast(incident);
             doHandle(incident);
@@ -94,15 +108,14 @@ public class OnCallSystem {
 
         abstract protected void doHandle(Incident incident);
 
-        public Employee(Position position) {
-            this.employeeId = UUID.randomUUID().toString();
+        public IncidentHandler(Position position) {
+            super(position);
             this.isAvailable = true;
             this.incidents = new LinkedList<>();
-            this.position = position;
         }
     }
 
-    class Boss extends Employee {
+    class Boss extends IncidentHandler {
         public Boss() {
             super(Position.BOSS);
         }
@@ -113,7 +126,7 @@ public class OnCallSystem {
         }
     }
 
-    class Worker extends Employee {
+    class Worker extends IncidentHandler {
         private final List<Lead> knownLeads;
 
         public Worker(List<Lead> leads) {
@@ -137,7 +150,7 @@ public class OnCallSystem {
         }
     }
 
-    class Lead extends Employee {
+    class Lead extends IncidentHandler {
         private final List<Boss> knownBosses;
         public Lead(List<Boss> bosses) {
             super(Position.LEAD);

@@ -1,31 +1,39 @@
 package com.oo.elevator;
 
-import jdk.jfr.Frequency;
-
 import java.util.*;
 
-import static com.oo.elevator.ElevatorSystem.Elevator.Status.*;
-
 public class ElevatorSystem {
-    interface ElevatorHandler {
+
+    private interface ElevatorHandler {
         void addRequest(Request request);
     }
 
-    static class OverloadException extends RuntimeException {
+    private static class OverloadException extends RuntimeException {
         public OverloadException(int capacity, int currentNumberOfPassengers) {
             super(String.format("Elevator can only take %s people, current number: %s", capacity, currentNumberOfPassengers));
         }
     }
 
-    static class InvalidTargetLayerException extends RuntimeException {
+    private static class InvalidTargetLayerException extends RuntimeException {
         public InvalidTargetLayerException(int low, int high) {
             super(String.format("Elevator can only go between %s and %s", low, high));
         }
     }
 
-    class Elevator implements ElevatorHandler {
-        enum Status {
-            UP, DOWN, STOP
+    private class Elevator implements ElevatorHandler {
+        private enum Status {
+            UP, DOWN, STOP;
+
+            // only write for practice
+            public Status fromString(String direction) {
+                for (Status s : Status.values()) {
+                    if (s.toString().equalsIgnoreCase(direction)) {
+                        return s;
+                    }
+                }
+                // should have an exception here
+                return null;
+            }
         }
 
         private String id;
@@ -42,7 +50,7 @@ public class ElevatorSystem {
             this.passengers = new ArrayList<>();
             this.pendingRequests = new LinkedList<>();
             this.currentRequest = null;
-            this.currentStatus = STOP;
+            this.currentStatus = Status.STOP;
             this.currentLayer = 0;
         }
 
@@ -51,6 +59,7 @@ public class ElevatorSystem {
             if (this.passengers.size() >= capacity) {
                 throw new OverloadException(this.capacity, this.passengers.size());
             }
+
             this.passengers.add(request.owner);
             this.pendingRequests.offerLast(request);
             handleRequest();
@@ -60,9 +69,9 @@ public class ElevatorSystem {
             while (!pendingRequests.isEmpty()) {
                 var cur = pendingRequests.pollFirst();
 
-                if (currentStatus == STOP) {
+                if (currentStatus == Status.STOP) {
                     doHandle(cur);
-                } else if (currentStatus == UP) {
+                } else if (currentStatus == Status.UP) {
                     if (cur.to >= currentLayer) {
                         doHandle(cur);
                     } else {
@@ -91,30 +100,23 @@ public class ElevatorSystem {
         private void send(Request request) {
             System.out.printf("Elevator id %s has got passenger %s, start sending %n", this.id, request.owner.passengerId);
             if (this.currentLayer < request.to) {
-                goesUp(request.to);
+                move(request.from, Status.UP);
             } else {
-                goesDown(request.to);
+                move(request.from, Status.DOWN);
             }
         }
 
         private void pick(Request request) {
             System.out.printf("Elevator id %s is picking up passenger %s %n", this.id, request.owner.passengerId);
             if (this.currentLayer < request.from) {
-                goesUp(request.from);
+                move(request.from, Status.UP);
             } else {
-                goesDown(request.from);
+                move(request.from, Status.DOWN);
             }
         }
 
-        private void goesUp(int to) {
-            this.currentStatus = UP;
-            System.out.printf("Elevator id %s is going %s from %s to layer %s %n", this.id, this.currentStatus, this.currentLayer, to);
-            this.currentLayer = to;
-            arrive(to);
-        }
-
-        private void goesDown(int to) {
-            this.currentStatus = DOWN;
+        private void move(int to, Status direction) {
+            this.currentStatus = direction;
             System.out.printf("Elevator id %s is going %s from %s to layer %s %n", this.id, this.currentStatus, this.currentLayer, to);
             this.currentLayer = to;
             arrive(to);
@@ -122,7 +124,7 @@ public class ElevatorSystem {
 
         private void arrive(int to) {
             this.currentLayer = to;
-            this.currentStatus = STOP;
+            this.currentStatus = Status.STOP;
             System.out.printf("Elevator id %s arrives layer %s %n", this.id, to);
         }
 
@@ -132,7 +134,7 @@ public class ElevatorSystem {
         }
     }
 
-    class Passenger {
+    private class Passenger {
         private final String passengerId;
         private final List<Request> requests;
 
@@ -146,7 +148,7 @@ public class ElevatorSystem {
         }
     }
 
-    class Request {
+    private class Request {
         enum RequestStatus {
             PENDING, IN_PROCESS, CLOSED
         }
@@ -210,7 +212,6 @@ public class ElevatorSystem {
     }
 
     public static void main(String[] args) {
-
         var system = new ElevatorSystem(10, 1, 15);
         system.goUp("1", 7, 8);
         system.goDown("2", 1, 4);

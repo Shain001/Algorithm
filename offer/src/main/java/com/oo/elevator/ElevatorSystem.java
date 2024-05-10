@@ -1,5 +1,7 @@
 package com.oo.elevator;
 
+import jdk.jfr.Frequency;
+
 import java.util.*;
 
 import static com.oo.elevator.ElevatorSystem.Elevator.Status.*;
@@ -7,17 +9,15 @@ import static com.oo.elevator.ElevatorSystem.Elevator.Status.*;
 public class ElevatorSystem {
     interface ElevatorHandler {
         void addRequest(Request request);
-
-        void handleRequest();
     }
 
-    class OverloadException extends RuntimeException {
+    static class OverloadException extends RuntimeException {
         public OverloadException(int capacity, int currentNumberOfPassengers) {
             super(String.format("Elevator can only take %s people, current number: %s", capacity, currentNumberOfPassengers));
         }
     }
 
-    class InvalidTargetLayerException extends RuntimeException {
+    static class InvalidTargetLayerException extends RuntimeException {
         public InvalidTargetLayerException(int low, int high) {
             super(String.format("Elevator can only go between %s and %s", low, high));
         }
@@ -29,10 +29,10 @@ public class ElevatorSystem {
         }
 
         private String id;
-        private int capacity;
-        private List<Passenger> passengers;
+        private final int capacity;
+        private final List<Passenger> passengers;
+        private final Deque<Request> pendingRequests;
         private Status currentStatus;
-        private Deque<Request> pendingRequests;
         private Request currentRequest;
         private int currentLayer;
 
@@ -48,34 +48,29 @@ public class ElevatorSystem {
 
         @Override
         public void addRequest(Request request) {
-            // check capacity;
             if (this.passengers.size() >= capacity) {
                 throw new OverloadException(this.capacity, this.passengers.size());
             }
             this.passengers.add(request.owner);
             this.pendingRequests.offerLast(request);
+            handleRequest();
         }
 
-        @Override
         public void handleRequest() {
             while (!pendingRequests.isEmpty()) {
                 var cur = pendingRequests.pollFirst();
 
                 if (currentStatus == STOP) {
-                    if (cur.to > currentLayer) {
-                        this.goesUp(cur);
-                    } else {
-                        this.goesDown(cur);
-                    }
+                    doHandle(cur);
                 } else if (currentStatus == UP) {
                     if (cur.to >= currentLayer) {
-                        this.goesUp(cur);
+                        doHandle(cur);
                     } else {
                         this.pendingRequests.addLast(cur);
                     }
                 } else {
                     if (cur.to <= currentLayer) {
-                        this.goesDown(cur);
+                        doHandle(cur);
                     } else {
                         this.pendingRequests.addLast(cur);
                     }
@@ -83,41 +78,71 @@ public class ElevatorSystem {
             }
         }
 
-        private void goesUp(Request reqeust) {
+        private void doHandle(Request request) {
+            this.currentRequest = request;
+
+            pick(request);
+
+            send(request);
+
+            closeRequest();
+        }
+
+        private void send(Request request) {
+            System.out.printf("Elevator id %s has got passenger %s, start sending %n", this.id, request.owner.passengerId);
+            if (this.currentLayer < request.to) {
+                goesUp(request.to);
+            } else {
+                goesDown(request.to);
+            }
+        }
+
+        private void pick(Request request) {
+            System.out.printf("Elevator id %s is picking up passenger %s %n", this.id, request.owner.passengerId);
+            if (this.currentLayer < request.from) {
+                goesUp(request.from);
+            } else {
+                goesDown(request.from);
+            }
+        }
+
+        private void goesUp(int to) {
             this.currentStatus = UP;
-            this.currentRequest = reqeust;
-            System.out.printf("Elevator id %s is going %s from %s to layer %s %n", this.id, this.currentStatus.toString(), this.currentLayer, this.currentRequest.to);
-            arrive();
+            System.out.printf("Elevator id %s is going %s from %s to layer %s %n", this.id, this.currentStatus, this.currentLayer, to);
+            this.currentLayer = to;
+            arrive(to);
         }
 
-        private void goesDown(Request reqeust) {
+        private void goesDown(int to) {
             this.currentStatus = DOWN;
-            this.currentRequest = reqeust;
-            System.out.printf("Elevator id %s is going %s from %s to layer %s %n", this.id, this.currentStatus.toString(), this.currentLayer, this.currentRequest.to);
-            arrive();
+            System.out.printf("Elevator id %s is going %s from %s to layer %s %n", this.id, this.currentStatus, this.currentLayer, to);
+            this.currentLayer = to;
+            arrive(to);
         }
 
-        private void arrive() {
-            this.currentLayer = this.currentRequest.to;
+        private void arrive(int to) {
+            this.currentLayer = to;
             this.currentStatus = STOP;
-            this.passengers.remove(this.currentRequest.owner);
-            System.out.printf("Elevator id %s arrives layer %s %n", this.id, this.currentRequest.to);
+            System.out.printf("Elevator id %s arrives layer %s %n", this.id, to);
+        }
 
+        private void closeRequest() {
+            this.currentRequest.closeRequest();
             this.currentRequest = null;
         }
     }
 
     class Passenger {
-        private String passengerId;
-        private Request request;
+        private final String passengerId;
+        private final List<Request> requests;
 
         public Passenger(String passengerId) {
             this.passengerId = passengerId;
-            this.request = null;
+            this.requests = new ArrayList<>();
         }
 
         public void addRequest(Request request) {
-            this.request = request;
+            this.requests.add(request);
         }
     }
 
@@ -132,7 +157,7 @@ public class ElevatorSystem {
         private String requestId;
         private final Passenger owner;
 
-        public Request(int to, int from, Passenger owner) {
+        public Request(int from, int to, Passenger owner) {
             this.to = to;
             this.from = from;
             this.requestStatus = RequestStatus.PENDING;
@@ -145,10 +170,10 @@ public class ElevatorSystem {
         }
     }
 
-    private ElevatorHandler elevator;
-    private Map<String, Passenger> passengers;
-    private int height;
-    private int low;
+    private final ElevatorHandler elevator;
+    private final Map<String, Passenger> passengers;
+    private final int height;
+    private final int low;
 
     public ElevatorSystem(int height, int low, int capacity) {
         this.elevator = new Elevator(capacity);
@@ -163,17 +188,9 @@ public class ElevatorSystem {
         }
 
         var passenger = getOrCreatePassenger(passengerId);
-        var request = new Request(to, from, passenger);
+        var request = new Request(from, to, passenger);
+        passenger.addRequest(request);
         elevator.addRequest(request);
-        handle();
-    }
-
-    private Passenger getOrCreatePassenger(String passengerId) {
-        if (passengerId.contains(passengerId)) {
-            return passengers.get(passengerId);
-        } else {
-            return new Passenger(passengerId);
-        }
     }
 
     public void goDown(String passengerId, int from, int to) {
@@ -183,12 +200,13 @@ public class ElevatorSystem {
 
         var passenger = getOrCreatePassenger(passengerId);
         var request = new Request(to, from, passenger);
+        passenger.addRequest(request);
         elevator.addRequest(request);
-        handle();
     }
 
-    private void handle() {
-        elevator.handleRequest();
+    private Passenger getOrCreatePassenger(String passengerId) {
+        passengers.putIfAbsent(passengerId, new Passenger(passengerId));
+        return passengers.get(passengerId);
     }
 
     public static void main(String[] args) {

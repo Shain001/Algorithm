@@ -4,8 +4,8 @@ import java.util.*;
 
 public class ElevatorSystem {
 
-    private interface ElevatorHandler {
-        void addRequest(Request request);
+    private interface MoveRequestHandler {
+        void addRequest(MoveRequest request);
     }
 
     private static class OverloadException extends RuntimeException {
@@ -20,7 +20,7 @@ public class ElevatorSystem {
         }
     }
 
-    private class Elevator implements ElevatorHandler {
+    private class Elevator implements MoveRequestHandler {
         private enum Status {
             UP, DOWN, STOP;
 
@@ -39,9 +39,9 @@ public class ElevatorSystem {
         private String id;
         private final int capacity;
         private final List<Passenger> passengers;
-        private final Deque<Request> pendingRequests;
+        private final Deque<MoveRequest> pendingRequests;
         private Status currentStatus;
-        private Request currentRequest;
+        private MoveRequest currentRequest;
         private int currentLayer;
 
         public Elevator(int capacity) {
@@ -55,7 +55,7 @@ public class ElevatorSystem {
         }
 
         @Override
-        public void addRequest(Request request) {
+        public void addRequest(MoveRequest request) {
             if (this.passengers.size() >= capacity) {
                 throw new OverloadException(this.capacity, this.passengers.size());
             }
@@ -65,29 +65,24 @@ public class ElevatorSystem {
             handleRequest();
         }
 
-        public void handleRequest() {
+        private void handleRequest() {
             while (!pendingRequests.isEmpty()) {
                 var cur = pendingRequests.pollFirst();
-
-                if (currentStatus == Status.STOP) {
+                if (canHandle(cur)) {
                     doHandle(cur);
-                } else if (currentStatus == Status.UP) {
-                    if (cur.to >= currentLayer) {
-                        doHandle(cur);
-                    } else {
-                        this.pendingRequests.addLast(cur);
-                    }
                 } else {
-                    if (cur.to <= currentLayer) {
-                        doHandle(cur);
-                    } else {
-                        this.pendingRequests.addLast(cur);
-                    }
+                    this.pendingRequests.add(cur); // If the top request can't be handled now, put back to queue and process later
                 }
             }
         }
 
-        private void doHandle(Request request) {
+        private boolean canHandle(MoveRequest cur) {
+            return (currentStatus == Status.STOP) ||
+                    (currentStatus == Status.UP && cur.to >= currentLayer) ||
+                    (currentStatus == Status.DOWN && cur.to <= currentLayer);
+        }
+
+        private void doHandle(MoveRequest request) {
             this.currentRequest = request;
 
             pick(request);
@@ -97,16 +92,16 @@ public class ElevatorSystem {
             closeRequest();
         }
 
-        private void send(Request request) {
+        private void send(MoveRequest request) {
             System.out.printf("Elevator id %s has got passenger %s, start sending %n", this.id, request.owner.passengerId);
             if (this.currentLayer < request.to) {
-                move(request.from, Status.UP);
+                move(request.to, Status.UP);
             } else {
-                move(request.from, Status.DOWN);
+                move(request.to, Status.DOWN);
             }
         }
 
-        private void pick(Request request) {
+        private void pick(MoveRequest request) {
             System.out.printf("Elevator id %s is picking up passenger %s %n", this.id, request.owner.passengerId);
             if (this.currentLayer < request.from) {
                 move(request.from, Status.UP);
@@ -136,19 +131,19 @@ public class ElevatorSystem {
 
     private class Passenger {
         private final String passengerId;
-        private final List<Request> requests;
+        private final List<MoveRequest> requests;
 
         public Passenger(String passengerId) {
             this.passengerId = passengerId;
             this.requests = new ArrayList<>();
         }
 
-        public void addRequest(Request request) {
+        public void addRequest(MoveRequest request) {
             this.requests.add(request);
         }
     }
 
-    private class Request {
+    private class MoveRequest {
         enum RequestStatus {
             PENDING, IN_PROCESS, CLOSED
         }
@@ -159,7 +154,7 @@ public class ElevatorSystem {
         private String requestId;
         private final Passenger owner;
 
-        public Request(int from, int to, Passenger owner) {
+        public MoveRequest(int from, int to, Passenger owner) {
             this.to = to;
             this.from = from;
             this.requestStatus = RequestStatus.PENDING;
@@ -172,7 +167,7 @@ public class ElevatorSystem {
         }
     }
 
-    private final ElevatorHandler elevator;
+    private final MoveRequestHandler elevator;
     private final Map<String, Passenger> passengers;
     private final int height;
     private final int low;
@@ -190,7 +185,7 @@ public class ElevatorSystem {
         }
 
         var passenger = getOrCreatePassenger(passengerId);
-        var request = new Request(from, to, passenger);
+        var request = new MoveRequest(from, to, passenger);
         passenger.addRequest(request);
         elevator.addRequest(request);
     }
@@ -201,7 +196,7 @@ public class ElevatorSystem {
         }
 
         var passenger = getOrCreatePassenger(passengerId);
-        var request = new Request(to, from, passenger);
+        var request = new MoveRequest(to, from, passenger);
         passenger.addRequest(request);
         elevator.addRequest(request);
     }

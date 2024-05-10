@@ -1,4 +1,4 @@
-package com.design.microsoftInterview;
+package com.oo.microsoftInterview;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.design.undergroundSystem;
+package com.oo.undergroundSystem;
 
 public class Passenger {
     private int id;

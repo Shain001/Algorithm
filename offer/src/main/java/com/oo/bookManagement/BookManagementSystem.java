@@ -65,12 +65,16 @@ public class BookManagementSystem {
             currentBorrows = new HashMap<>();
         }
 
-        public void borrowBook(Record record) {
+        public void addRecord(Record record) {
             this.openRecords.add(record);
+            updateCurrentBorrows(record);
+            System.out.printf("Record id %s has been added to customer's openRecords, customer id: %s %n", record.id, this.id);
+        }
+
+        private void updateCurrentBorrows(Record record) {
             for (Book b : record.unreturnedBooks) {
                 currentBorrows.put(b, record);
             }
-            System.out.printf("Record id %s has been added to customer's openRecords, customer id: %s %n", record.id, this.id);
         }
 
         public void returnBooks(List<Book> books) {
@@ -155,8 +159,10 @@ public class BookManagementSystem {
         void addBook(String name, int id, Book.BookType type) throws Exception;
 
         Book findBookById(int id) throws Exception;
+        List<Book> findBooksById(List<Integer> ids) throws Exception;
 
         List<Book> findBooksByName(String name);
+        List<Book> findAvailableBooksByName(List<String> names);
     }
 
     class InMemoryBookRepository implements BookRepository {
@@ -201,6 +207,18 @@ public class BookManagementSystem {
         }
 
         @Override
+        public List<Book> findBooksById(List<Integer> ids) throws Exception {
+            var books = new ArrayList<Book>();
+
+            for (Integer i : ids) {
+                var book = this.findBookById(i);
+                books.add(book);
+            }
+
+            return books;
+        }
+
+        @Override
         public List<Book> findBooksByName(String name) {
             var result = new ArrayList<Book>();
 
@@ -209,12 +227,59 @@ public class BookManagementSystem {
 
             return result;
         }
+
+        @Override
+        public List<Book> findAvailableBooksByName(List<String> names) {
+            var result = new ArrayList<Book>();
+
+            for (String n : names) {
+                var books = this.findBooksByName(n);
+
+                if (!books.isEmpty()) {
+                    for (Book b : books) {
+                        if (b.bookType == Book.BookType.ELECTRIC) {
+                            result.add(b);
+                            break;
+                        }
+
+                        if (b.bookType == Book.BookType.PAPER && b.isAvailable()) {
+                            result.add(b);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+    }
+
+    interface BorrowService {
+        void borrowBooks(Customer customer, List<Book> books);
+
+        void returnBooks(Customer customer, List<Book> books);
+    }
+
+    class inStoreBorrowService implements BorrowService {
+
+        @Override
+        public void borrowBooks(Customer customer, List<Book> books) {
+            var record = new Record(books, customer);
+            customer.addRecord(record);
+        }
+
+        @Override
+        public void returnBooks(Customer customer, List<Book> books) {
+            customer.returnBooks(books);
+        }
     }
 
     private final BookRepository repository;
     private final Map<Integer, Customer> customers;
+    private final BorrowService service;
 
     public BookManagementSystem() {
+        this.service = new inStoreBorrowService();
         this.repository = new InMemoryBookRepository();
         this.customers = new HashMap<>();
     }
@@ -222,38 +287,18 @@ public class BookManagementSystem {
     public void borrowBook(List<String> names, int customerId) throws Exception {
         var customer = getCustomer(customerId);
 
-        var targetBooks = new ArrayList<Book>();
-        for (String n : names) {
-            var books = this.repository.findBooksByName(n);
+        var availableBooks = this.repository.findAvailableBooksByName(names);
 
-            if (!books.isEmpty()) {
-                for (Book b : books) {
-                    if (b.bookType == Book.BookType.ELECTRIC) {
-                        targetBooks.add(b);
-                        break;
-                    }
-
-                    if (b.bookType == Book.BookType.PAPER && b.isAvailable()) {
-                        targetBooks.add(b);
-                        break;
-                    }
-                }
-            }
-        }
-
-        var record = new Record(targetBooks, customer);
-        customer.borrowBook(record);
+        service.borrowBooks(customer, availableBooks);
     }
 
     public void returnBook(int customerId, List<Integer> ids) throws Exception {
         var customer = getCustomer(customerId);
 
-        var books = new ArrayList<Book>();
-        for (Integer i : ids) {
-            var book = repository.findBookById(i);
-            books.add(book);
-        }
-        customer.returnBooks(books);
+        var books = this.repository.findBooksById(ids);
+
+        service.returnBooks(customer, books);
+
     }
 
 

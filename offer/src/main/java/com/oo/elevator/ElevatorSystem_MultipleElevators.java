@@ -5,6 +5,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * 注意 状态模式的学习应用。 取代了 enum， 更便于维护。但是实现起来太复杂， 感觉有点麻烦
+ *
+ */
 public class ElevatorSystem_MultipleElevators {
 
     private static class OverloadException extends RuntimeException {

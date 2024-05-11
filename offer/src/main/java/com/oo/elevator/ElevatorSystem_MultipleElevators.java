@@ -6,11 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ElevatorSystem_MultipleElevators {
-    private interface MoveRequestHandler {
-        void addRequest(ElevatorSystem_MultipleElevators.MoveRequest request);
-
-        boolean isAvailale();
-    }
 
     private static class OverloadException extends RuntimeException {
         public OverloadException(int capacity, int currentNumberOfPassengers) {
@@ -24,28 +19,98 @@ public class ElevatorSystem_MultipleElevators {
         }
     }
 
-    private class Elevator implements ElevatorSystem_MultipleElevators.MoveRequestHandler {
-        private enum Status {
-            UP, DOWN, STOP;
+    private interface MoveRequestHandler {
+        void addRequest(ElevatorSystem_MultipleElevators.MoveRequest request);
 
-            // only write for practice
-            public ElevatorSystem_MultipleElevators.Elevator.Status fromString(String direction) {
-                for (ElevatorSystem_MultipleElevators.Elevator.Status s : ElevatorSystem_MultipleElevators.Elevator.Status.values()) {
-                    if (s.toString().equalsIgnoreCase(direction)) {
-                        return s;
-                    }
-                }
-                // should have an exception here
-                return null;
+        boolean isAvailable();
+    }
+
+    private interface MoveRequestHandlerState {
+        void move(int to);
+
+        void stop();
+
+    }
+
+    private abstract class ElevatorStateTemplate implements MoveRequestHandlerState {
+        protected Elevator handler;
+
+        private ElevatorStateTemplate(Elevator handler) {
+            this.handler = handler;
+        }
+
+        @Override
+        public final void move(int to) {
+            doMove(to);
+        }
+
+        protected abstract void doMove(int to);
+
+        @Override
+        public void stop() {
+            handler.currentStatus = handler.stopState;
+            System.out.printf("Elevator id %s arrives layer %s %n", handler.id, handler.currentRequest.to);
+        }
+    }
+
+    private class ElevatorUpState extends ElevatorStateTemplate {
+        private ElevatorUpState(Elevator elevator) {
+            super(elevator);
+        }
+
+        @Override
+        protected void doMove(int to) {
+            if (handler.currentLayer < to) {
+                System.out.printf("Elevator id %s is going UP from %s to layer %s %n", handler.id, handler.currentLayer, to);
+                handler.currentLayer = to;  // Move the elevator up to the target floor
             }
         }
+    }
+
+    private class ElevatorDownState extends ElevatorStateTemplate {
+        private ElevatorDownState(Elevator elevator) {
+            super(elevator);
+        }
+
+        @Override
+        protected void doMove(int to) {
+
+            if (handler.currentLayer > to) {
+                System.out.printf("Elevator id %s is going DOWN from %s to layer %s %n", handler.id, handler.currentLayer, to);
+                handler.currentLayer = to;
+            }
+        }
+    }
+
+    private class ElevatorStopState extends ElevatorStateTemplate {
+        private ElevatorStopState(Elevator elevator) {
+            super(elevator);
+        }
+
+        @Override
+        protected void doMove(int to) {
+            if (handler.currentLayer > to) {
+                handler.currentStatus = handler.downState;
+            } else {
+                handler.currentStatus = handler.upState;
+            }
+
+            handler.currentStatus.move(to);
+        }
+    }
+
+
+    private class Elevator implements MoveRequestHandler {
 
         private final int id;
         private final int capacity;
         private final List<ElevatorSystem_MultipleElevators.Passenger> passengers;
         private final Deque<ElevatorSystem_MultipleElevators.MoveRequest> pendingRequests;
-        private ElevatorSystem_MultipleElevators.Elevator.Status currentStatus;
-        private ElevatorSystem_MultipleElevators.MoveRequest currentRequest;
+        private MoveRequestHandlerState currentStatus;
+        private final ElevatorStopState stopState;
+        private final ElevatorUpState upState;
+        private final ElevatorDownState downState;
+        private MoveRequest currentRequest;
         private int currentLayer;
 
         public Elevator(int id, int capacity) {
@@ -54,7 +119,10 @@ public class ElevatorSystem_MultipleElevators {
             this.passengers = new ArrayList<>();
             this.pendingRequests = new LinkedList<>();
             this.currentRequest = null;
-            this.currentStatus = ElevatorSystem_MultipleElevators.Elevator.Status.STOP;
+            this.stopState = new ElevatorStopState(this);
+            this.upState = new ElevatorUpState(this);
+            this.downState = new ElevatorDownState(this);
+            this.currentStatus = stopState;
             this.currentLayer = 0;
         }
 
@@ -70,7 +138,7 @@ public class ElevatorSystem_MultipleElevators {
         }
 
         @Override
-        public boolean isAvailale() {
+        public boolean isAvailable() {
             return this.passengers.size() < this.capacity;
         }
 
@@ -86,12 +154,12 @@ public class ElevatorSystem_MultipleElevators {
         }
 
         private boolean canHandleNow(ElevatorSystem_MultipleElevators.MoveRequest cur) {
-            return (currentStatus == ElevatorSystem_MultipleElevators.Elevator.Status.STOP) ||
-                    (currentStatus == ElevatorSystem_MultipleElevators.Elevator.Status.UP && cur.to >= currentLayer) ||
-                    (currentStatus == ElevatorSystem_MultipleElevators.Elevator.Status.DOWN && cur.to <= currentLayer);
+            return (currentStatus == stopState) ||
+                    (currentStatus == upState && cur.to >= currentLayer) ||
+                    (currentStatus == downState && cur.to <= currentLayer);
         }
 
-        private void doHandle(ElevatorSystem_MultipleElevators.MoveRequest request) {
+        private void doHandle(MoveRequest request) {
             this.currentRequest = request;
 
             pickPassenger(request);
@@ -101,35 +169,16 @@ public class ElevatorSystem_MultipleElevators {
             closeCurrentRequest();
         }
 
-        private void sendPassenger(ElevatorSystem_MultipleElevators.MoveRequest request) {
+        private void sendPassenger(MoveRequest request) {
             System.out.printf("Elevator id %s has got passenger %s, start sending %n", this.id, request.owner.passengerId);
-            if (this.currentLayer < request.to) {
-                move(request.to, ElevatorSystem_MultipleElevators.Elevator.Status.UP);
-            } else {
-                move(request.to, ElevatorSystem_MultipleElevators.Elevator.Status.DOWN);
-            }
+            this.currentStatus.move(request.to);
+            this.currentStatus.stop();
         }
 
-        private void pickPassenger(ElevatorSystem_MultipleElevators.MoveRequest request) {
+        private void pickPassenger(MoveRequest request) {
             System.out.printf("Elevator id %s is picking up passenger %s %n", this.id, request.owner.passengerId);
-            if (this.currentLayer < request.from) {
-                move(request.from, ElevatorSystem_MultipleElevators.Elevator.Status.UP);
-            } else {
-                move(request.from, ElevatorSystem_MultipleElevators.Elevator.Status.DOWN);
-            }
-        }
-
-        private void move(int to, ElevatorSystem_MultipleElevators.Elevator.Status direction) {
-            this.currentStatus = direction;
-            System.out.printf("Elevator id %s is going %s from %s to layer %s %n", this.id, this.currentStatus, this.currentLayer, to);
-            this.currentLayer = to;
-            arrive(to);
-        }
-
-        private void arrive(int to) {
-            this.currentLayer = to;
-            this.currentStatus = ElevatorSystem_MultipleElevators.Elevator.Status.STOP;
-            System.out.printf("Elevator id %s arrives layer %s %n", this.id, to);
+            this.currentStatus.move(request.from);
+            this.currentStatus.stop();
         }
 
         private void closeCurrentRequest() {
@@ -224,15 +273,15 @@ public class ElevatorSystem_MultipleElevators {
 
         for (MoveRequestHandler e : elevators) {
             Elevator elevator = (Elevator) e;
-            if (!elevator.isAvailale()) {
+            if (!elevator.isAvailable()) {
                 continue;
             }
 
             // 计算距离，考虑方向性
             int distance = Math.abs(elevator.currentLayer - from);
-            boolean isSameDirection = (elevator.currentStatus == Elevator.Status.UP && from >= elevator.currentLayer) ||
-                    (elevator.currentStatus == Elevator.Status.DOWN && from <= elevator.currentLayer) ||
-                    (elevator.currentStatus == Elevator.Status.STOP);
+            boolean isSameDirection = (elevator.currentStatus == elevator.upState && from >= elevator.currentLayer) ||
+                    (elevator.currentStatus == elevator.downState && from <= elevator.currentLayer) ||
+                    (elevator.currentStatus == elevator.stopState);
 
             if (distance < smallestDistance && isSameDirection) {
                 smallestDistance = distance;
@@ -244,7 +293,7 @@ public class ElevatorSystem_MultipleElevators {
             // 如果没有合适的电梯，选择最近的备选
             for (MoveRequestHandler e : elevators) {
                 Elevator elevator = (Elevator) e;
-                if (!elevator.isAvailale()) {
+                if (!elevator.isAvailable()) {
                     continue;
                 }
 

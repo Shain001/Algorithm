@@ -8,12 +8,17 @@ public class BookManagementSystem {
     static class BookFactory {
         public static Book createBook(String name, int id, Book.BookType type) throws Exception {
             switch (type) {
-                case ELECTRIC -> {return new ElectricBook(name, id);}
-                case PAPER -> {return new PaperBook(name, id);}
+                case ELECTRIC -> {
+                    return new ElectricBook(name, id);
+                }
+                case PAPER -> {
+                    return new PaperBook(name, id);
+                }
                 default -> throw new Exception("Invalid Type");
             }
         }
     }
+
     abstract static class Book {
         enum BookType {
             PAPER, ELECTRIC
@@ -35,7 +40,7 @@ public class BookManagementSystem {
         }
     }
 
-    static class PaperBook extends Book{
+    static class PaperBook extends Book {
         public PaperBook(String name, int id) {
             super(name, id, BookType.PAPER);
         }
@@ -89,6 +94,7 @@ public class BookManagementSystem {
         enum RecordStatus {
             IN_PROGRESS, RETURNED, HALF_RETURNED
         }
+
         private String id;
         private final List<Book> unreturnedBooks;
         private final List<Book> returnedBooks;
@@ -116,7 +122,7 @@ public class BookManagementSystem {
         }
 
         public boolean returnBook(Book book) {
-            if (! unreturnedBooks.contains(book)) {
+            if (!unreturnedBooks.contains(book)) {
 //                throw new RecordUpdateException();
                 System.out.println("book not exist");
                 return false;
@@ -145,17 +151,71 @@ public class BookManagementSystem {
         }
     }
 
-    private final Map<Integer, PaperBook> paperBookIdMap;
-    private final Map<Integer, ElectricBook> electricBookIdMap;
-    private final Map<String, Set<PaperBook>> paperBookNameMap;
-    private final Map<String , Set<ElectricBook>> electricBookNameMap;
+    interface BookRepository {
+        void addBook(String name, int id, Book.BookType type) throws Exception;
+
+        Book findBookById(int id) throws Exception;
+
+        List<Book> findBooksByName(String name);
+    }
+
+    class InMemoryBookRepository implements BookRepository {
+        private final Map<Integer, PaperBook> paperBookIdMap;
+        private final Map<Integer, ElectricBook> electricBookIdMap;
+        private final Map<String, Set<PaperBook>> paperBookNameMap;
+        private final Map<String, Set<ElectricBook>> electricBookNameMap;
+
+        public InMemoryBookRepository() {
+            this.paperBookNameMap = new HashMap<>();
+            this.electricBookNameMap = new HashMap<>();
+            this.paperBookIdMap = new HashMap<>();
+            this.electricBookIdMap = new HashMap<>();
+        }
+
+        @Override
+        public void addBook(String name, int id, Book.BookType type) throws Exception {
+            var book = BookFactory.createBook(name, id, type);
+            switch (type) {
+                case ELECTRIC -> {
+                    this.electricBookIdMap.put(id, (ElectricBook) book);
+                    var updatedElectric = this.electricBookNameMap.getOrDefault(name, new HashSet<>());
+                    updatedElectric.add((ElectricBook) book);
+                    this.electricBookNameMap.put(name, updatedElectric);
+                }
+                case PAPER -> {
+                    this.paperBookIdMap.put(id, (PaperBook) book);
+                    var updatedPaper = this.paperBookNameMap.getOrDefault(name, new HashSet<>());
+                    updatedPaper.add((PaperBook) book);
+                    this.paperBookNameMap.put(name, updatedPaper);
+                }
+            }
+        }
+
+        @Override
+        public Book findBookById(int id) throws Exception {
+            if (!paperBookIdMap.containsKey(id) && !electricBookIdMap.containsKey(id)) {
+                throw new Exception("invalid book id");
+            } else {
+                return paperBookIdMap.containsKey(id) ? paperBookIdMap.get(id) : electricBookIdMap.get(id);
+            }
+        }
+
+        @Override
+        public List<Book> findBooksByName(String name) {
+            var result = new ArrayList<Book>();
+
+            result.addAll(electricBookNameMap.getOrDefault(name, Collections.emptySet()));
+            result.addAll(paperBookNameMap.getOrDefault(name, Collections.emptySet()));
+
+            return result;
+        }
+    }
+
+    private final BookRepository repository;
     private final Map<Integer, Customer> customers;
 
     public BookManagementSystem() {
-        this.paperBookNameMap = new HashMap<>();
-        this.electricBookNameMap = new HashMap<>();
-        this.paperBookIdMap = new HashMap<>();
-        this.electricBookIdMap = new HashMap<>();
+        this.repository = new InMemoryBookRepository();
         this.customers = new HashMap<>();
     }
 
@@ -164,7 +224,8 @@ public class BookManagementSystem {
 
         var targetBooks = new ArrayList<Book>();
         for (String n : names) {
-            var books = searchBookByName(n);
+            var books = this.repository.findBooksByName(n);
+
             if (!books.isEmpty()) {
                 for (Book b : books) {
                     if (b.bookType == Book.BookType.ELECTRIC) {
@@ -189,27 +250,15 @@ public class BookManagementSystem {
 
         var books = new ArrayList<Book>();
         for (Integer i : ids) {
-            var book = findBookById(i);
+            var book = repository.findBookById(i);
             books.add(book);
         }
         customer.returnBooks(books);
     }
 
-    private Book findBookById(Integer i) throws Exception {
-        if (!paperBookIdMap.containsKey(i) && !electricBookIdMap.containsKey(i)) {
-            throw new Exception("invalid book id");
-        } else {
-            return paperBookIdMap.containsKey(i)? paperBookIdMap.get(i): electricBookIdMap.get(i);
-        }
-    }
 
     public List<Book> searchBookByName(String name) {
-        var result = new ArrayList<Book>();
-
-        result.addAll(electricBookNameMap.getOrDefault(name, Collections.emptySet()));
-        result.addAll(paperBookNameMap.getOrDefault(name, Collections.emptySet()));
-
-        return result;
+        return this.repository.findBooksByName(name);
     }
 
     public List<Record> getUserOpenRecords(int customerId) throws Exception {
@@ -229,21 +278,7 @@ public class BookManagementSystem {
     }
 
     public void addBook(String name, int id, Book.BookType type) throws Exception {
-        var book = BookFactory.createBook(name, id, type);
-        switch (type) {
-            case ELECTRIC -> {
-                this.electricBookIdMap.put(id, (ElectricBook) book);
-                var updatedElectric = this.electricBookNameMap.getOrDefault(name, new HashSet<>());
-                updatedElectric.add((ElectricBook) book);
-                this.electricBookNameMap.put(name, updatedElectric);
-            }
-            case PAPER -> {
-                this.paperBookIdMap.put(id, (PaperBook) book);
-                var updatedPaper = this.paperBookNameMap.getOrDefault(name, new HashSet<>());
-                updatedPaper.add((PaperBook) book);
-                this.paperBookNameMap.put(name, updatedPaper);
-            }
-        }
+        this.repository.addBook(name, id, type);
     }
 
     private Customer getCustomer(int id) throws Exception {

@@ -56,41 +56,22 @@ public class BookManagementSystem {
         private final int id;
         private final List<Record> closedRecords;
         private final List<Record> openRecords;
-        private final Map<Book, Record> currentBorrows;
 
         public Customer(int id) {
             this.id = id;
             this.closedRecords = new ArrayList<>();
             this.openRecords = new ArrayList<>();
-            currentBorrows = new HashMap<>();
         }
 
-        public void addRecord(Record record) {
+        public void addOpenRecord(Record record) {
             this.openRecords.add(record);
-            updateCurrentBorrows(record);
             System.out.printf("Record id %s has been added to customer's openRecords, customer id: %s %n", record.id, this.id);
         }
 
-        private void updateCurrentBorrows(Record record) {
-            for (Book b : record.unreturnedBooks) {
-                currentBorrows.put(b, record);
-            }
-        }
-
-        public void returnBooks(List<Book> books) {
-            for (Book b : books) {
-                var record = currentBorrows.get(b);
-                var isClosedAfterReturn = record.returnBook(b);
-                System.out.printf("Book name: %s, id: %s is returned %n", b.name, b.id);
-                checkClosedRecord(record, isClosedAfterReturn);
-            }
-        }
-
-        private void checkClosedRecord(Record record, boolean isClosedAfterReturn) {
-            if (isClosedAfterReturn) {
-                System.out.printf("Record %s has been closed since all book returned %n", record.id);
-                closedRecords.add(record);
-            }
+        public void addCloseRecord(Record record) {
+            this.closedRecords.add(record);
+            this.openRecords.remove(record);
+            System.out.printf("Record id %s has been removed from customer's openRecords, customer id: %s %n", record.id, this.id);
         }
     }
 
@@ -134,24 +115,19 @@ public class BookManagementSystem {
 
             unreturnedBooks.remove(book);
             returnedBooks.add(book);
-            updateHalfReturned();
-
-            if (unreturnedBooks.isEmpty()) {
-                closeRecord();
-                return true;
-            }
-
-            return false;
-
-        }
-
-        private void updateHalfReturned() {
             this.status = HALF_RETURNED;
+            System.out.printf("Book name: %s, id: %s is returned %n", book.name, book.id);
+            return checkCurrentStatus();
         }
 
-        private void closeRecord() {
+        private boolean checkCurrentStatus() {
+            if (!unreturnedBooks.isEmpty()) {
+                return false;
+            }
             this.endDate = 234;
             this.status = RETURNED;
+            System.out.printf("Record id %s is closed since all books are returned, borrower is customer %s%n", this.id, this.borrower.id);
+            return true;
         }
     }
 
@@ -159,9 +135,11 @@ public class BookManagementSystem {
         void addBook(String name, int id, Book.BookType type) throws Exception;
 
         Book findBookById(int id) throws Exception;
+
         List<Book> findBooksById(List<Integer> ids) throws Exception;
 
         List<Book> findBooksByName(String name);
+
         List<Book> findAvailableBooksByName(List<String> names);
     }
 
@@ -265,12 +243,18 @@ public class BookManagementSystem {
         @Override
         public void borrowBooks(Customer customer, List<Book> books) {
             var record = new Record(books, customer);
-            customer.addRecord(record);
+            customer.addOpenRecord(record);
         }
 
         @Override
         public void returnBooks(Customer customer, List<Book> books) {
-            customer.returnBooks(books);
+            for (Book b : books) {
+                var record = b.currentRecord;
+
+                if (record.returnBook(b)) {
+                    customer.addCloseRecord(record);
+                }
+            }
         }
     }
 

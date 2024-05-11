@@ -2,7 +2,7 @@ package com.oo.elevator;
 
 import java.util.*;
 
-public class ElevatorSystem {
+public class ElevatorSystem_SingleElevator {
 
     private interface MoveRequestHandler {
         void addRequest(MoveRequest request);
@@ -68,7 +68,7 @@ public class ElevatorSystem {
         private void handleRequest() {
             while (!pendingRequests.isEmpty()) {
                 var cur = pendingRequests.pollFirst();
-                if (canHandle(cur)) {
+                if (canHandleNow(cur)) {
                     doHandle(cur);
                 } else {
                     this.pendingRequests.add(cur); // If the top request can't be handled now, put back to queue and process later
@@ -76,7 +76,7 @@ public class ElevatorSystem {
             }
         }
 
-        private boolean canHandle(MoveRequest cur) {
+        private boolean canHandleNow(MoveRequest cur) {
             return (currentStatus == Status.STOP) ||
                     (currentStatus == Status.UP && cur.to >= currentLayer) ||
                     (currentStatus == Status.DOWN && cur.to <= currentLayer);
@@ -85,14 +85,14 @@ public class ElevatorSystem {
         private void doHandle(MoveRequest request) {
             this.currentRequest = request;
 
-            pick(request);
+            pickPassenger(request);
 
-            send(request);
+            sendPassenger(request);
 
-            closeRequest();
+            closeCurrentRequest();
         }
 
-        private void send(MoveRequest request) {
+        private void sendPassenger(MoveRequest request) {
             System.out.printf("Elevator id %s has got passenger %s, start sending %n", this.id, request.owner.passengerId);
             if (this.currentLayer < request.to) {
                 move(request.to, Status.UP);
@@ -101,7 +101,7 @@ public class ElevatorSystem {
             }
         }
 
-        private void pick(MoveRequest request) {
+        private void pickPassenger(MoveRequest request) {
             System.out.printf("Elevator id %s is picking up passenger %s %n", this.id, request.owner.passengerId);
             if (this.currentLayer < request.from) {
                 move(request.from, Status.UP);
@@ -123,7 +123,7 @@ public class ElevatorSystem {
             System.out.printf("Elevator id %s arrives layer %s %n", this.id, to);
         }
 
-        private void closeRequest() {
+        private void closeCurrentRequest() {
             this.currentRequest.closeRequest();
             this.currentRequest = null;
         }
@@ -172,7 +172,7 @@ public class ElevatorSystem {
     private final int height;
     private final int low;
 
-    public ElevatorSystem(int height, int low, int capacity) {
+    public ElevatorSystem_SingleElevator(int height, int low, int capacity) {
         this.elevator = new Elevator(capacity);
         this.height = height;
         this.low = low;
@@ -207,7 +207,7 @@ public class ElevatorSystem {
     }
 
     public static void main(String[] args) {
-        var system = new ElevatorSystem(10, 1, 15);
+        var system = new ElevatorSystem_SingleElevator(10, 1, 15);
         system.goUp("1", 7, 8);
         system.goDown("2", 1, 4);
         system.goUp("3", 2, 1);

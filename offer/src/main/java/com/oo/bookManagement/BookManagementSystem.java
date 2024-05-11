@@ -5,7 +5,16 @@ import java.util.*;
 import static com.oo.bookManagement.BookManagementSystem.Record.RecordStatus.*;
 
 public class BookManagementSystem {
-    abstract class Book {
+    static class BookFactory {
+        public static Book createBook(String name, int id, Book.BookType type) throws Exception {
+            switch (type) {
+                case ELECTRIC -> {return new ElectricBook(name, id);}
+                case PAPER -> {return new PaperBook(name, id);}
+                default -> throw new Exception("Invalid Type");
+            }
+        }
+    }
+    abstract static class Book {
         enum BookType {
             PAPER, ELECTRIC
         }
@@ -26,13 +35,13 @@ public class BookManagementSystem {
         }
     }
 
-    class PaperBook extends Book{
+    static class PaperBook extends Book{
         public PaperBook(String name, int id) {
             super(name, id, BookType.PAPER);
         }
     }
 
-    class ElectricBook extends Book {
+    static class ElectricBook extends Book {
         public ElectricBook(String name, int id) {
             super(name, id, BookType.ELECTRIC);
         }
@@ -136,13 +145,17 @@ public class BookManagementSystem {
         }
     }
 
-    private final List<PaperBook> paperBooks;
-    private final List<ElectricBook> electricBooks;
+    private final Map<Integer, PaperBook> paperBookIdMap;
+    private final Map<Integer, ElectricBook> electricBookIdMap;
+    private final Map<String, Set<PaperBook>> paperBookNameMap;
+    private final Map<String , Set<ElectricBook>> electricBookNameMap;
     private final Map<Integer, Customer> customers;
 
     public BookManagementSystem() {
-        this.paperBooks = new ArrayList<>();
-        this.electricBooks = new ArrayList<>();
+        this.paperBookNameMap = new HashMap<>();
+        this.electricBookNameMap = new HashMap<>();
+        this.paperBookIdMap = new HashMap<>();
+        this.electricBookIdMap = new HashMap<>();
         this.customers = new HashMap<>();
     }
 
@@ -151,7 +164,7 @@ public class BookManagementSystem {
 
         var targetBooks = new ArrayList<Book>();
         for (String n : names) {
-            var books = searchBook(n);
+            var books = searchBookByName(n);
             if (!books.isEmpty()) {
                 for (Book b : books) {
                     if (b.bookType == Book.BookType.ELECTRIC) {
@@ -173,37 +186,28 @@ public class BookManagementSystem {
 
     public void returnBook(int customerId, List<Integer> ids) throws Exception {
         var customer = getCustomer(customerId);
+
         var books = new ArrayList<Book>();
         for (Integer i : ids) {
-            for (Book b : paperBooks) {
-                if (b.id == i) {
-                    books.add(b);
-                }
-            }
-
-            for (Book b: electricBooks) {
-                if (b.id == i) {
-                    books.add(b);
-                }
-            }
+            var book = findBookById(i);
+            books.add(book);
         }
         customer.returnBooks(books);
     }
 
-    public List<Book> searchBook(String name) {
+    private Book findBookById(Integer i) throws Exception {
+        if (!paperBookIdMap.containsKey(i) && !electricBookIdMap.containsKey(i)) {
+            throw new Exception("invalid book id");
+        } else {
+            return paperBookIdMap.containsKey(i)? paperBookIdMap.get(i): electricBookIdMap.get(i);
+        }
+    }
+
+    public List<Book> searchBookByName(String name) {
         var result = new ArrayList<Book>();
 
-        for (PaperBook b: paperBooks) {
-            if (b.name.equals(name)) {
-                result.add(b);
-            }
-        }
-
-        for (ElectricBook b : electricBooks) {
-            if (b.name.equals(name)) {
-                result.add(b);
-            }
-        }
+        result.addAll(electricBookNameMap.getOrDefault(name, Collections.emptySet()));
+        result.addAll(paperBookNameMap.getOrDefault(name, Collections.emptySet()));
 
         return result;
     }
@@ -224,10 +228,21 @@ public class BookManagementSystem {
         this.customers.put(id, new Customer(id));
     }
 
-    public void addBook(String name, int id, Book.BookType type) {
+    public void addBook(String name, int id, Book.BookType type) throws Exception {
+        var book = BookFactory.createBook(name, id, type);
         switch (type) {
-            case ELECTRIC -> this.electricBooks.add(new ElectricBook(name, id));
-            case PAPER -> this.paperBooks.add(new PaperBook(name, id));
+            case ELECTRIC -> {
+                this.electricBookIdMap.put(id, (ElectricBook) book);
+                var updatedElectric = this.electricBookNameMap.getOrDefault(name, new HashSet<>());
+                updatedElectric.add((ElectricBook) book);
+                this.electricBookNameMap.put(name, updatedElectric);
+            }
+            case PAPER -> {
+                this.paperBookIdMap.put(id, (PaperBook) book);
+                var updatedPaper = this.paperBookNameMap.getOrDefault(name, new HashSet<>());
+                updatedPaper.add((PaperBook) book);
+                this.paperBookNameMap.put(name, updatedPaper);
+            }
         }
     }
 
@@ -250,6 +265,10 @@ public class BookManagementSystem {
         system.addBook("Book6", 6, Book.BookType.ELECTRIC);
         system.addBook("Book7", 7, Book.BookType.ELECTRIC);
 
+        testcase1(system);
+    }
+
+    private static void testcase1(BookManagementSystem system) throws Exception {
         system.addCustomer(1);
         system.addCustomer(2);
         system.addCustomer(3);

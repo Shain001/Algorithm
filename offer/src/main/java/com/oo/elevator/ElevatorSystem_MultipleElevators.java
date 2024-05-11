@@ -20,11 +20,12 @@ public class ElevatorSystem_MultipleElevators {
     }
 
     private interface MoveRequestHandler {
-        void addRequest(ElevatorSystem_MultipleElevators.MoveRequest request);
+        void addRequest(MoveRequest request);
 
         boolean isAvailable();
     }
 
+    // 状态模式 + 模版模式
     private interface MoveRequestHandlerState {
         void move(int to);
 
@@ -32,6 +33,7 @@ public class ElevatorSystem_MultipleElevators {
 
     }
 
+    // 状态模式 + 模版模式
     private abstract class ElevatorStateTemplate implements MoveRequestHandlerState {
         protected Elevator handler;
 
@@ -104,14 +106,15 @@ public class ElevatorSystem_MultipleElevators {
 
         private final int id;
         private final int capacity;
-        private final List<ElevatorSystem_MultipleElevators.Passenger> passengers;
-        private final Deque<ElevatorSystem_MultipleElevators.MoveRequest> pendingRequests;
+        private final List<Passenger> passengers;
+        private final Deque<MoveRequest> pendingRequests;
+        private MoveRequest currentRequest;
+        private int currentLayer;
+        // 状态模式
         private MoveRequestHandlerState currentStatus;
         private final ElevatorStopState stopState;
         private final ElevatorUpState upState;
         private final ElevatorDownState downState;
-        private MoveRequest currentRequest;
-        private int currentLayer;
 
         public Elevator(int id, int capacity) {
             this.id = id;
@@ -127,9 +130,9 @@ public class ElevatorSystem_MultipleElevators {
         }
 
         @Override
-        public void addRequest(ElevatorSystem_MultipleElevators.MoveRequest request) {
+        public void addRequest(MoveRequest request) {
             if (this.passengers.size() >= capacity) {
-                throw new ElevatorSystem_MultipleElevators.OverloadException(this.capacity, this.passengers.size());
+                throw new OverloadException(this.capacity, this.passengers.size());
             }
 
             this.passengers.add(request.owner);
@@ -153,7 +156,7 @@ public class ElevatorSystem_MultipleElevators {
             }
         }
 
-        private boolean canHandleNow(ElevatorSystem_MultipleElevators.MoveRequest cur) {
+        private boolean canHandleNow(MoveRequest cur) {
             return (currentStatus == stopState) ||
                     (currentStatus == upState && cur.to >= currentLayer) ||
                     (currentStatus == downState && cur.to <= currentLayer);
@@ -189,14 +192,14 @@ public class ElevatorSystem_MultipleElevators {
 
     private class Passenger {
         private final String passengerId;
-        private final List<ElevatorSystem_MultipleElevators.MoveRequest> requests;
+        private final List<MoveRequest> requests;
 
         public Passenger(String passengerId) {
             this.passengerId = passengerId;
             this.requests = new ArrayList<>();
         }
 
-        public void addRequest(ElevatorSystem_MultipleElevators.MoveRequest request) {
+        public void addRequest(MoveRequest request) {
             this.requests.add(request);
         }
     }
@@ -208,20 +211,20 @@ public class ElevatorSystem_MultipleElevators {
 
         private int to;
         private int from;
-        private ElevatorSystem_MultipleElevators.MoveRequest.RequestStatus requestStatus;
+        private MoveRequest.RequestStatus requestStatus;
         private String requestId;
-        private final ElevatorSystem_MultipleElevators.Passenger owner;
+        private final Passenger owner;
 
-        public MoveRequest(int from, int to, ElevatorSystem_MultipleElevators.Passenger owner) {
+        public MoveRequest(int from, int to, Passenger owner) {
             this.to = to;
             this.from = from;
-            this.requestStatus = ElevatorSystem_MultipleElevators.MoveRequest.RequestStatus.PENDING;
+            this.requestStatus = MoveRequest.RequestStatus.PENDING;
             this.requestId = UUID.randomUUID().toString();
             this.owner = owner;
         }
 
         public void closeRequest() {
-            this.requestStatus = ElevatorSystem_MultipleElevators.MoveRequest.RequestStatus.CLOSED;
+            this.requestStatus = MoveRequest.RequestStatus.CLOSED;
         }
     }
 
@@ -240,11 +243,11 @@ public class ElevatorSystem_MultipleElevators {
 
     public void goUp(String passengerId, int from, int to) {
         if (to > height) {
-            throw new ElevatorSystem_MultipleElevators.InvalidTargetLayerException(low, height);
+            throw new InvalidTargetLayerException(low, height);
         }
 
         var passenger = getOrCreatePassenger(passengerId);
-        var request = new ElevatorSystem_MultipleElevators.MoveRequest(from, to, passenger);
+        var request = new MoveRequest(from, to, passenger);
         passenger.addRequest(request);
 
         var selectedElevator = findClosestElevator(request);
@@ -253,11 +256,11 @@ public class ElevatorSystem_MultipleElevators {
 
     public void goDown(String passengerId, int from, int to) {
         if (to < low) {
-            throw new ElevatorSystem_MultipleElevators.InvalidTargetLayerException(low, height);
+            throw new InvalidTargetLayerException(low, height);
         }
 
         var passenger = getOrCreatePassenger(passengerId);
-        var request = new ElevatorSystem_MultipleElevators.MoveRequest(from, to, passenger);
+        var request = new MoveRequest(from, to, passenger);
         passenger.addRequest(request);
 
         var selectedElevator = findClosestElevator(request);
@@ -310,8 +313,8 @@ public class ElevatorSystem_MultipleElevators {
     }
 
 
-    private ElevatorSystem_MultipleElevators.Passenger getOrCreatePassenger(String passengerId) {
-        passengers.putIfAbsent(passengerId, new ElevatorSystem_MultipleElevators.Passenger(passengerId));
+    private Passenger getOrCreatePassenger(String passengerId) {
+        passengers.putIfAbsent(passengerId, new Passenger(passengerId));
         return passengers.get(passengerId);
     }
 

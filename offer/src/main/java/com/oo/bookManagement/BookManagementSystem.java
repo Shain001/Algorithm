@@ -4,6 +4,12 @@ import java.util.*;
 
 import static com.oo.bookManagement.BookManagementSystem.Record.RecordStatus.*;
 
+/**
+ * 重点是 抽离 repository类 以及service类
+ *
+ * Book类的设置有些问题。 electric class 应该是 List of records. 因为可以无限被借阅。
+ * 改起来太麻烦不改了
+ */
 public class BookManagementSystem {
     static class BookFactory {
         public static Book createBook(String name, int id, Book.BookType type) throws Exception {
